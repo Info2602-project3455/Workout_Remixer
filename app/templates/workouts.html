@@ -368,40 +368,21 @@
         <div class="edit-container">
             <!-- Left Column: Currently Editing -->
             <div>
-                <h2 class="section-title">Currently Editing Routine #1</h2>
-                <div class="current-routine-list">
-                    <!-- Workout Items -->
-                    <div class="routine-exercise-item">
-                        <span class="exercise-name">Workout #1</span>
-                        <div class="exercise-buttons">
-                            <button class="btn-swap">Swap</button>
-                            <button class="btn-delete">Delete</button>
+                <h2 class="section-title">Currently Editing: {{ routine.name }}</h2>
+                <div class="current-routine-list" id="currentRoutineList">
+                    {% if routine.workouts %}
+                        {% for rw in routine.workouts %}
+                        <div class="routine-exercise-item" data-workout-id="{{ rw.workout.id }}" data-routine-workout-id="{{ rw.id }}">
+                            <span class="exercise-name">{{ rw.workout.name }}</span>
+                            <div class="exercise-buttons">
+                                <button class="btn-swap" onclick="markForSwap({{ rw.id }}, '{{ rw.workout.name }}')">Swap</button>
+                                <button class="btn-delete" onclick="markForDelete({{ rw.id }})">Delete</button>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="routine-exercise-item">
-                        <span class="exercise-name">Workout #2</span>
-                        <div class="exercise-buttons">
-                            <button class="btn-swap">Swap</button>
-                            <button class="btn-delete">Delete</button>
-                        </div>
-                    </div>
-
-                    <div class="routine-exercise-item">
-                        <span class="exercise-name">Workout #3</span>
-                        <div class="exercise-buttons">
-                            <button class="btn-swap">Swap</button>
-                            <button class="btn-delete">Delete</button>
-                        </div>
-                    </div>
-
-                    <div class="routine-exercise-item">
-                        <span class="exercise-name">Workout #4</span>
-                        <div class="exercise-buttons">
-                            <button class="btn-swap">Swap</button>
-                            <button class="btn-delete">Delete</button>
-                        </div>
-                    </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: #aaa; text-align: center; padding: 2rem;">No workouts in this routine yet. Add some from the search panel.</p>
+                    {% endif %}
                 </div>
             </div>
 
@@ -409,7 +390,7 @@
             <div class="search-section">
                 <div>
                     <h2 class="section-title">Search Workouts</h2>
-                    <input type="text" class="search-field" placeholder="Search workouts..." id="searchWorkouts">
+                    <input type="text" class="search-field" placeholder="Search workouts..." id="searchWorkouts" onkeyup="filterWorkouts()">
                 </div>
 
                 <div>
@@ -417,24 +398,16 @@
                 </div>
 
                 <div>
-                    <div class="search-results">
-                        <!-- Workout Card 1 -->
-                        <div class="workout-card">
-                            <div class="workout-card-title">Workout Name</div>
+                    <div class="search-results" id="searchResults">
+                        {% for workout in workouts %}
+                        <div class="workout-card" data-workout-id="{{ workout.id }}" data-name="{{ workout.name.lower() }}" data-category="{{ workout.category.lower() }}">
+                            <div class="workout-card-title">{{ workout.name }}</div>
                             <div class="workout-card-buttons">
-                                <button class="btn-view">View</button>
-                                <button class="btn-action">Add</button>
+                                <button class="btn-view" onclick="viewWorkout({{ workout.id }}, '{{ workout.name }}')">View</button>
+                                <button class="btn-action" data-action="add" onclick="addWorkout({{ workout.id }}, '{{ workout.name }}')">Add</button>
                             </div>
                         </div>
-
-                        <!-- Workout Card 2 -->
-                        <div class="workout-card">
-                            <div class="workout-card-title">Workout Name</div>
-                            <div class="workout-card-buttons">
-                                <button class="btn-view">View</button>
-                                <button class="btn-action">Swap</button>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -443,17 +416,131 @@
         <!-- Action Buttons -->
         <div class="modal-actions">
             <button class="btn-cancel" onclick="history.back()">Cancel</button>
-            <button class="btn-save">Save Changes</button>
+            <button class="btn-save" onclick="saveChanges()">Save Changes</button>
         </div>
     </div>
 </div>
 
 {% endblock %}
-            async saveRoutine() {
-                // Persistent save using SQLModel via FastAPI
-                alert("Saving changes to database...");
+
+<script>
+    const routine_id = {{ routine.id }};
+    let pendingChanges = {
+        toAdd: [],
+        toDelete: [],
+        toSwap: null
+    };
+    let swapTarget = null;
+
+    function filterWorkouts() {
+        const searchInput = document.getElementById('searchWorkouts').value.toLowerCase();
+        const workoutCards = document.querySelectorAll('.workout-card');
+        
+        workoutCards.forEach(card => {
+            const name = card.getAttribute('data-name');
+            const category = card.getAttribute('data-category');
+            
+            if (name.includes(searchInput) || category.includes(searchInput)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
             }
+        });
+    }
+
+    function markForDelete(routineWorkoutId) {
+        if (!pendingChanges.toDelete.includes(routineWorkoutId)) {
+            pendingChanges.toDelete.push(routineWorkoutId);
         }
-    }).mount('#workout-app');
+        
+        const element = document.querySelector(`[data-routine-workout-id="${routineWorkoutId}"]`);
+        element.style.opacity = '0.5';
+        element.style.textDecoration = 'line-through';
+    }
+
+    function markForSwap(routineWorkoutId, workoutName) {
+        swapTarget = { id: routineWorkoutId, name: workoutName };
+        alert(`Selected "${workoutName}" to swap. Now click "Add" or "Swap" on another workout.`);
+    }
+
+    function addWorkout(workoutId, workoutName) {
+        if (swapTarget) {
+            // Swap operation
+            pendingChanges.toSwap = {
+                routineWorkoutId: swapTarget.id,
+                newWorkoutId: workoutId
+            };
+            alert(`Swapping "${swapTarget.name}" with "${workoutName}"`);
+            swapTarget = null;
+        } else {
+            // Add operation
+            if (!pendingChanges.toAdd.includes(workoutId)) {
+                pendingChanges.toAdd.push(workoutId);
+            }
+            
+            const workoutCard = document.querySelector(`[data-workout-id="${workoutId}"]`);
+            const btn = workoutCard.querySelector('.btn-action');
+            btn.textContent = 'Added';
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+        }
+    }
+
+    function viewWorkout(workoutId, workoutName) {
+        alert(`Viewing details for ${workoutName}`);
+        // Could open a modal here with workout details
+    }
+
+    async function saveChanges() {
+        try {
+            // Delete workouts from routine
+            for (const routineWorkoutId of pendingChanges.toDelete) {
+                const response = await fetch(`/api/routines/${routine_id}/workouts/${routineWorkoutId}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) throw new Error('Failed to delete workout');
+            }
+
+            // Handle swap
+            if (pendingChanges.toSwap) {
+                const { routineWorkoutId, newWorkoutId } = pendingChanges.toSwap;
+                // First delete the old one
+                await fetch(`/api/routines/${routine_id}/workouts/${routineWorkoutId}`, {
+                    method: 'DELETE'
+                });
+                // Then add the new one
+                const response = await fetch(`/api/routines/${routine_id}/workouts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        workout_id: newWorkoutId,
+                        sets: 3,
+                        reps: 10
+                    })
+                });
+                if (!response.ok) throw new Error('Failed to add workout');
+            }
+
+            // Add new workouts
+            for (const workoutId of pendingChanges.toAdd) {
+                const response = await fetch(`/api/routines/${routine_id}/workouts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        workout_id: workoutId,
+                        sets: 3,
+                        reps: 10
+                    })
+                });
+                if (!response.ok) throw new Error('Failed to add workout');
+            }
+
+            alert('Changes saved successfully!');
+            window.location.href = '{{ url_for("routines_view") }}';
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to save changes: ' + error.message);
+        }
+    }
 </script>
 {% endblock %}
