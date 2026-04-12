@@ -3,6 +3,10 @@ from sqlmodel import SQLModel, Session, create_engine
 from app.config import get_settings
 from contextlib import contextmanager
 
+# Import all models to register them with SQLModel.metadata
+from app.models.user import User
+from app.models import Workout, Routine, RoutineWorkout
+
 logger = logging.getLogger(__name__)
 
 engine = create_engine(
