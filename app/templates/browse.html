@@ -24,23 +24,36 @@
     </div>
 
     <!-- Workouts Grid -->
-    <div class="row g-4">
-        <!-- Group Workout Card -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-header bg-light text-center py-3">
-                    <h5 class="mb-0">GROUP WORKOUT</h5>
-                </div>
-                <div class="card-body text-center">
-                    <div style="font-size: 3rem; margin: 1rem 0;">🏋️</div>
-                    <p class="card-text text-muted">Workout description</p>
-                </div>
-                <div class="card-footer bg-light d-grid gap-2">
-                    <button class="btn btn-primary btn-sm">View</button>
-                </div>
+<div class="row g-4" id="workoutsGrid">
+    {% for workout in workouts %}
+    <div class="col-md-6 col-lg-4 workout-card">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-header bg-light text-center py-3">
+                <h5 class="mb-0">{{ workout.name }}</h5>
+            </div>
+            <div class="card-body">
+                <p class="badge bg-primary">{{ workout.category }}</p>
+                <p class="badge bg-secondary">{{ workout.muscle_group }}</p>
+                <p class="badge bg-info text-dark">{{ workout.difficulty }}</p>
+                <p class="card-text text-muted mt-2">{{ workout.description | striptags | truncate(100) }}</p>
+            </div>
+            <div class="card-footer bg-light d-grid gap-2">
+                <button class="btn btn-primary btn-sm">Add to Routine</button>
             </div>
         </div>
+    </div>
+    {% endfor %}
+</div>
 
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const query = this.value.toLowerCase();
+    document.querySelectorAll('.workout-card').forEach(card => {
+        const name = card.querySelector('h5').textContent.toLowerCase();
+        card.style.display = name.includes(query) ? 'block' : 'none';
+    });
+});
+</script>
         <!-- Chest Workout Card -->
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm border-0">
