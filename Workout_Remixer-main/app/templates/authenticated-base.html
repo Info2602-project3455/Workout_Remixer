@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block internal_css %}
+
+<style>
+    body {
+        overflow-x: hidden;
+        background-color: #f8f9fa;
+    }
+
+    #wrapper {
+        display: flex;
+        width: 100%;
+    }
+
+    #sidebar {
+        display: none;
+    }
+
+    #content {
+        width: 100%;
+        padding: 1rem;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        border: none;
+        border-radius: 1rem;
+    }
+
+    .summary-card {
+        border-left: 5px solid #0d6efd;
+    }
+
+    .navbar {
+        border-bottom: 1px solid #dee2e6;
+    }
+</style>
+
+{% block additional_styles %}{% endblock %}
+
+{% endblock %}
+
+
+{% block content %}
+<div id="wrapper">
+
+    <div id="content" style="width: 100%;">
+        <!--<nav class="navbar navbar-expand-lg bg-white mb-4 px-3 rounded-3 shadow-sm">
+            <span class="fw-semibold">Welcome, {{user.username}}</span>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <span class="text-muted small">Logged in</span>
+            </div>
+        </nav>-->
+        
+        <div class="row">
+            <div class="col-12">
+                {% for message in get_flashed_messages(request) %}
+                    <div class="alert alert-{{ message.type }}" role="alert">{{ message.message }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+        {% block subpage_content %}{% endblock %}
+
+    </div>
+
+
+</div>
+
+
+{% block subpage_scripts %}{% endblock %}
+
+{% endblock %}
