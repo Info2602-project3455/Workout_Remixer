@@ -1,0 +1,459 @@
+{% extends "authenticated-base.html" %}
+
+{% block title %}Edit Routine - Workout Remixer{% endblock %}
+
+{% block internal_css %}
+<style>
+    body { 
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    :root { 
+        --red: #D6361A;
+        --orange: #EB8315;
+        --lime: #A4C628;
+    }
+    
+    .navbar-custom {
+        background: rgba(20, 20, 20, 0.95);
+        border-bottom: 2px solid var(--lime);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+    }
+    
+    .navbar-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    .welcome-text {
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+    
+    .nav-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .nav-btn {
+        border-radius: 50px;
+        padding: 8px 20px;
+        border: none;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+    
+    .nav-btn-inactive {
+        background: transparent;
+        color: #fff;
+        border: 2px solid #444;
+    }
+    
+    .nav-btn-inactive:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+    }
+    
+    .nav-btn-logout {
+        background: var(--red);
+        color: #fff;
+        text-decoration: none;
+    }
+    
+    .nav-btn-logout:hover {
+        background: #c42a14;
+        transform: translateY(-2px);
+    }
+    
+    .content-wrapper {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .edit-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .current-routine-list {
+        background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 1.5rem;
+        min-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .routine-exercise-item {
+        background: rgba(42, 42, 42, 0.6);
+        border-left: 3px solid var(--lime);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .exercise-name {
+        color: #fff;
+        font-weight: 600;
+    }
+    
+    .exercise-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .btn-swap, .btn-delete {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-swap {
+        background: transparent;
+        border: 1px solid var(--orange);
+        color: var(--orange);
+    }
+    
+    .btn-swap:hover {
+        background: var(--orange);
+        color: #000;
+    }
+    
+    .btn-delete {
+        background: transparent;
+        border: 1px solid var(--red);
+        color: var(--red);
+    }
+    
+    .btn-delete:hover {
+        background: var(--red);
+        color: #fff;
+    }
+    
+    .search-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .search-field {
+        background: rgba(42, 42, 42, 0.8);
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 12px 16px;
+        color: #fff;
+        font-size: 0.95rem;
+    }
+    
+    .search-field::placeholder {
+        color: #666;
+    }
+    
+    .search-field:focus {
+        outline: none;
+        border-color: var(--lime);
+        box-shadow: 0 0 12px rgba(164, 198, 40, 0.2);
+    }
+    
+    .filter-label {
+        font-size: 0.9rem;
+        color: #aaa;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .search-results {
+        background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 1.5rem;
+        min-height: 250px;
+        overflow-y: auto;
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .workout-card {
+        background: rgba(42, 42, 42, 0.6);
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    .workout-card-title {
+        color: #fff;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+    }
+    
+    .workout-card-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .btn-view, .btn-action {
+        flex: 1;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-view {
+        background: transparent;
+        border: 1px solid #444;
+        color: #aaa;
+    }
+    
+    .btn-view:hover {
+        border-color: var(--lime);
+        color: var(--lime);
+    }
+    
+    .btn-action {
+        background: linear-gradient(135deg, var(--orange), var(--red));
+        border: none;
+        color: #fff;
+    }
+    
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(235, 131, 21, 0.3);
+    }
+    
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        padding-top: 2rem;
+    }
+    
+    .btn-cancel, .btn-save {
+        padding: 10px 28px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-cancel {
+        background: rgba(42, 42, 42, 0.8);
+        border: 1px solid #444;
+        color: #aaa;
+    }
+    
+    .btn-cancel:hover {
+        background: rgba(42, 42, 42, 1);
+        color: #fff;
+    }
+    
+    .btn-save {
+        background: linear-gradient(135deg, var(--lime), #91B623);
+        border: none;
+        color: #000;
+    }
+    
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(164, 198, 40, 0.4);
+    }
+    
+    .navbar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .navbar-title-group {
+        flex: 1;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--lime);
+        margin: 0;
+        margin-bottom: 0.2rem;
+    }
+    
+    .page-subtitle {
+        color: #aaa;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+</style>
+{% endblock %}
+
+{% block subpage_content %}
+<div style="background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); min-height: 100vh;">
+    <!-- Navbar -->
+    <div class="navbar-custom">
+        <div class="navbar-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <span class="welcome-text">Welcome, {{ user.username }}!</span>
+            </div>
+            <div class="navbar-header">
+                <div class="navbar-title-group">
+                    <h1 class="page-title">Workout Remixer</h1>
+                    <p class="page-subtitle">Build, customize, and remix your perfect workout routine</p>
+                </div>
+                <div class="nav-group">
+                    <a href="{{ url_for('user_home_view') }}" class="nav-btn nav-btn-inactive">Browse Workouts</a>
+                    <a href="{{ url_for('routines_view') }}" class="nav-btn nav-btn-inactive">View Routines</a>
+                    <a href="{{ url_for('logout') }}" class="nav-btn nav-btn-logout">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <h1 class="section-title" style="font-size: 2rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem;">Edit Routine</h1>
+
+        <!-- Two Column Layout -->
+        <div class="edit-container">
+            <!-- Left Column: Currently Editing -->
+            <div>
+                <h2 class="section-title">Currently Editing Routine #1</h2>
+                <div class="current-routine-list">
+                    <!-- Workout Items -->
+                    <div class="routine-exercise-item">
+                        <span class="exercise-name">Workout #1</span>
+                        <div class="exercise-buttons">
+                            <button class="btn-swap">Swap</button>
+                            <button class="btn-delete">Delete</button>
+                        </div>
+                    </div>
+
+                    <div class="routine-exercise-item">
+                        <span class="exercise-name">Workout #2</span>
+                        <div class="exercise-buttons">
+                            <button class="btn-swap">Swap</button>
+                            <button class="btn-delete">Delete</button>
+                        </div>
+                    </div>
+
+                    <div class="routine-exercise-item">
+                        <span class="exercise-name">Workout #3</span>
+                        <div class="exercise-buttons">
+                            <button class="btn-swap">Swap</button>
+                            <button class="btn-delete">Delete</button>
+                        </div>
+                    </div>
+
+                    <div class="routine-exercise-item">
+                        <span class="exercise-name">Workout #4</span>
+                        <div class="exercise-buttons">
+                            <button class="btn-swap">Swap</button>
+                            <button class="btn-delete">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Search & Results -->
+            <div class="search-section">
+                <div>
+                    <h2 class="section-title">Search Workouts</h2>
+                    <input type="text" class="search-field" placeholder="Search workouts..." id="searchWorkouts">
+                </div>
+
+                <div>
+                    <p class="filter-label">Filter</p>
+                </div>
+
+                <div>
+                    <div class="search-results">
+                        <!-- Workout Card 1 -->
+                        <div class="workout-card">
+                            <div class="workout-card-title">Workout Name</div>
+                            <div class="workout-card-buttons">
+                                <button class="btn-view">View</button>
+                                <button class="btn-action">Add</button>
+                            </div>
+                        </div>
+
+                        <!-- Workout Card 2 -->
+                        <div class="workout-card">
+                            <div class="workout-card-title">Workout Name</div>
+                            <div class="workout-card-buttons">
+                                <button class="btn-view">View</button>
+                                <button class="btn-action">Swap</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="history.back()">Cancel</button>
+            <button class="btn-save">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+            async saveRoutine() {
+                // Persistent save using SQLModel via FastAPI
+                alert("Saving changes to database...");
+            }
+        }
+    }).mount('#workout-app');
+</script>
+{% endblock %}
