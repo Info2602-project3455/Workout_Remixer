@@ -329,6 +329,7 @@
         </div>
 
         <!-- Workouts Grid -->
+        {% if workouts %}
         <div class="workout-grid">
             {% for workout in workouts %}
             <div class="workout-card" data-category="{{ workout.category | lower }}">
@@ -353,8 +354,13 @@
                     <button class="btn-add">Add to Routine</button>
                 </div>
             </div>
-            {% endfor %}            
+            {% endfor %}
         </div>
+        {% else %}
+        <div style="padding: 3rem; text-align: center; color: #ccc;">
+            No workouts found. Seed the database or add workouts to display cards here.
+        </div>
+        {% endif %}
     </div>
 </div>
 
