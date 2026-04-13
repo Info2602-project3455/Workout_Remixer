@@ -26,561 +26,155 @@
         padding: 1rem 2rem;
     }
     
-    .navbar-content {
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-    
-    .navbar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-    
-    .navbar-top-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.75rem;
-        font-size: 0.9rem;
-    }
-    
-    .welcome-message {
-        color: #fff;
-        font-weight: 600;
-    }
-    
-    .logged-in-indicator {
-        color: var(--lime);
-        font-weight: 600;
-    }
-    
-    .navbar-title-group {
-        flex: 1;
-    }
-    
-    .navbar-welcome {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #fff;
-        margin: 0;
-    }
-    
-    .nav-group {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
+    .navbar-content { max-width: 1400px; margin: 0 auto; }
+    .navbar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .navbar-title-group { flex: 1; }
+    .page-title { font-size: 1.8rem; font-weight: 700; color: var(--lime); margin: 0 0 0.2rem 0; }
+    .page-subtitle { color: #aaa; font-size: 0.85rem; margin: 0; }
+    .nav-group { display: flex; gap: 10px; align-items: center; }
     
     .nav-btn {
-        border-radius: 50px;
-        padding: 8px 20px;
-        border: none;
-        font-weight: 600;
-        font-size: 13px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        white-space: nowrap;
-        text-decoration: none;
+        border-radius: 50px; padding: 8px 20px; border: none;
+        font-weight: 600; font-size: 13px; transition: all 0.3s ease;
+        cursor: pointer; white-space: nowrap; text-decoration: none;
     }
-    
-    .nav-btn-active {
-        background: var(--lime);
-        color: #000;
-    }
-    
-    .nav-btn-inactive {
-        background: transparent;
-        color: #fff;
-        border: 2px solid #444;
-    }
-    
-    .nav-btn-inactive:hover {
-        border-color: var(--orange);
-        color: var(--orange);
-    }
-    
-    .nav-btn-logout {
-        background: var(--red);
-        color: #fff;
-        margin-left: auto;
-        text-decoration: none;
-    }
-    
-    .nav-btn-logout:hover {
-        background: #c42a14;
-        transform: translateY(-2px);
-    }
-    
-    .content-wrapper {
-        padding: 2rem;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-    
-    .page-header {
-        margin-bottom: 2rem;
-    }
-    
-    .page-title {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--lime);
-        margin: 0;
-        margin-bottom: 0.2rem;
-    }
-    
-    .page-subtitle {
-        color: #aaa;
-        font-size: 0.85rem;
-        margin: 0;
-    }
-    
+    .nav-btn-active { background: var(--lime); color: #000; }
+    .nav-btn-inactive { background: transparent; color: #fff; border: 2px solid #444; }
+    .nav-btn-inactive:hover { border-color: var(--orange); color: var(--orange); }
+    .nav-btn-logout { background: var(--red); color: #fff; text-decoration: none; }
+    .nav-btn-logout:hover { background: #c42a14; }
+
+    .content-wrapper { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+
     .btn-create {
         background: linear-gradient(135deg, var(--lime), #91B623);
-        border: none;
-        border-radius: 8px;
-        padding: 12px 28px;
-        color: #000;
-        font-weight: 700;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        border: none; border-radius: 8px; padding: 12px 28px;
+        color: #000; font-weight: 700; font-size: 0.95rem;
+        cursor: pointer; transition: all 0.3s ease;
+        text-transform: uppercase; letter-spacing: 0.5px;
     }
-    
-    .btn-create:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(164, 198, 40, 0.4);
-    }
-    
+    .btn-create:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(164, 198, 40, 0.4); }
+
     .routine-card {
         background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
-        border: 1px solid #333;
-        border-radius: 16px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
+        border: 1px solid #333; border-radius: 16px; overflow: hidden;
+        transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column;
     }
-    
-    .routine-card:hover {
-        border-color: var(--lime);
-        box-shadow: 0 8px 24px rgba(164, 198, 40, 0.15);
-    }
-    
-    .routine-header {
-        background: linear-gradient(135deg, #2a2a2a 0%, #323232 100%);
-        padding: 1.5rem;
-        border-bottom: 1px solid #333;
-    }
-    
-    .routine-name {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #fff;
-        margin: 0;
-    }
-    
-    .routine-body {
-        padding: 1.5rem;
-        flex-grow: 1;
-    }
-    
-    .routine-description {
-        color: #aaa;
-        margin-bottom: 1rem;
-        font-size: 0.9rem;
-    }
-    
+    .routine-card:hover { border-color: var(--lime); box-shadow: 0 8px 24px rgba(164, 198, 40, 0.15); }
+    .routine-header { background: linear-gradient(135deg, #2a2a2a 0%, #323232 100%); padding: 1.5rem; border-bottom: 1px solid #333; }
+    .routine-name { font-size: 1.25rem; font-weight: 700; color: #fff; margin: 0; }
+    .routine-body { padding: 1.5rem; flex-grow: 1; }
+    .routine-description { color: #aaa; margin-bottom: 1rem; font-size: 0.9rem; }
     .routine-badge {
         display: inline-block;
         background: linear-gradient(135deg, var(--orange), var(--red));
-        color: #fff;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
+        color: #fff; padding: 6px 16px; border-radius: 20px;
+        font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
     }
-    
-    .routine-exercises {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    
-    .routine-exercises li {
-        color: #bbb;
-        font-size: 0.9rem;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #333;
-    }
-    
-    .routine-exercises li:last-child {
-        border-bottom: none;
-    }
-    
-    .routine-footer {
-        padding: 1.5rem;
-        background: rgba(0, 0, 0, 0.2);
-        border-top: 1px solid #333;
-        display: grid;
-        gap: 0.75rem;
-    }
+    .routine-exercises { list-style: none; padding: 0; margin: 0; }
+    .routine-exercises li { color: #bbb; font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid #333; }
+    .routine-exercises li:last-child { border-bottom: none; }
+    .routine-footer { padding: 1.5rem; background: rgba(0,0,0,0.2); border-top: 1px solid #333; display: grid; gap: 0.75rem; }
     
     .btn-edit {
         background: linear-gradient(135deg, var(--lime), #91B623);
-        border: none;
-        border-radius: 8px;
-        padding: 10px 16px;
-        color: #000;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.9rem;
+        border: none; border-radius: 8px; padding: 10px 16px;
+        color: #000; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;
     }
-    
-    .btn-edit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(164, 198, 40, 0.3);
-    }
+    .btn-edit:hover { transform: translateY(-2px); }
     
     .btn-delete {
-        background: rgba(214, 54, 26, 0.2);
-        border: 1px solid var(--red);
-        border-radius: 8px;
-        padding: 10px 16px;
-        color: var(--red);
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.9rem;
+        background: rgba(214, 54, 26, 0.2); border: 1px solid var(--red);
+        border-radius: 8px; padding: 10px 16px; color: var(--red);
+        font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;
     }
-    
-    .btn-delete:hover {
-        background: var(--red);
-        color: #fff;
+    .btn-delete:hover { background: var(--red); color: #fff; }
+
+    /* Modal */
+    .modal-overlay {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center;
     }
-    
-    .modal-content {
+    .modal-overlay.active { display: flex; }
+    .modal-box {
         background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
-        border: 1px solid #333;
+        border: 1px solid #333; border-radius: 16px; width: 90%; max-width: 900px;
+        max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;
     }
-    
-    .modal-header {
-        border-bottom: 1px solid #333;
-        background: rgba(0, 0, 0, 0.3);
+    .modal-head {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 1.5rem 2rem; border-bottom: 1px solid #333; background: rgba(0,0,0,0.3);
     }
-    
-    .modal-title {
-        color: #fff;
-        font-weight: 700;
+    .modal-head h5 { color: #fff; font-weight: 700; margin: 0; font-size: 1.2rem; }
+    .modal-close { background: transparent; border: none; color: #aaa; font-size: 1.5rem; cursor: pointer; }
+    .modal-close:hover { color: #fff; }
+    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 2rem; overflow-y: auto; }
+    .section-title { font-size: 0.85rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 0.75rem 0; }
+
+    .routine-name-input, .search-workout-input {
+        background: rgba(42,42,42,0.8); border: 1px solid #444; border-radius: 8px;
+        padding: 12px 16px; color: #fff; font-size: 1rem; width: 100%;
     }
-    
-    .btn-close {
-        filter: brightness(0.7);
+    .routine-name-input::placeholder, .search-workout-input::placeholder { color: #666; }
+    .routine-name-input:focus, .search-workout-input:focus {
+        outline: none; border-color: var(--lime); box-shadow: 0 0 12px rgba(164,198,40,0.2);
     }
-    
-    .modal-body {
-        padding: 2rem;
-    }
-    
-    .form-label {
-        color: #aaa;
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.5rem;
-    }
-    
-    .form-control {
-        background: rgba(42, 42, 42, 0.8);
-        border: 1px solid #444;
-        border-radius: 8px;
-        color: #fff;
-        transition: all 0.3s ease;
-    }
-    
-    .form-control::placeholder {
-        color: #666;
-    }
-    
-    .form-control:focus {
-        background: rgba(42, 42, 42, 1);
-        border-color: var(--lime);
-        color: #fff;
-        box-shadow: 0 0 12px rgba(164, 198, 40, 0.2);
-    }
-    
-    .modal-footer {
-        border-top: 1px solid #333;
-        background: rgba(0, 0, 0, 0.3);
-    }
-    
-    .btn-modal-cancel {
-        background: rgba(42, 42, 42, 0.8);
-        border: 1px solid #444;
-        color: #aaa;
-        border-radius: 8px;
-        padding: 10px 24px;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-modal-cancel:hover {
-        background: rgba(42, 42, 42, 1);
-        color: #fff;
-    }
-    
-    .btn-modal-create {
-        background: linear-gradient(135deg, var(--lime), #91B623);
-        border: none;
-        border-radius: 8px;
-        padding: 10px 24px;
-        color: #000;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-modal-create:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(164, 198, 40, 0.4);
-    }
-    
-    /* Create Routine Modal Styles */
-    .create-routine-modal .modal-body {
-        padding: 0;
-    }
-    
-    .modal-create-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        padding: 2rem;
-    }
-    
-    .create-routine-section {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-    
-    .section-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #fff;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin: 0;
-    }
-    
-    .routine-name-input {
-        background: rgba(42, 42, 42, 0.8);
-        border: 1px solid #444;
-        border-radius: 8px;
-        padding: 12px 16px;
-        color: #fff;
-        font-size: 1rem;
-        width: 100%;
-    }
-    
-    .routine-name-input::placeholder {
-        color: #666;
-    }
-    
-    .routine-name-input:focus {
-        outline: none;
-        border-color: var(--lime);
-        box-shadow: 0 0 12px rgba(164, 198, 40, 0.2);
-    }
-    
+
     .added-workouts-list {
-        background: rgba(30, 30, 30, 0.8);
-        border: 1px solid #333;
-        border-radius: 8px;
-        padding: 1rem;
-        min-height: 300px;
-        overflow-y: auto;
+        background: rgba(30,30,30,0.8); border: 1px solid #333; border-radius: 8px;
+        padding: 1rem; min-height: 250px; overflow-y: auto;
     }
-    
     .added-workout-item {
-        background: rgba(42, 42, 42, 0.6);
-        border-left: 3px solid var(--lime);
-        padding: 12px;
-        margin-bottom: 0.75rem;
-        border-radius: 4px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        background: rgba(42,42,42,0.6); border-left: 3px solid var(--lime);
+        padding: 10px 12px; margin-bottom: 0.5rem; border-radius: 4px;
+        display: flex; justify-content: space-between; align-items: center;
     }
-    
-    .added-workout-name {
-        color: #fff;
-        font-weight: 600;
-    }
-    
-    .added-workout-remove {
-        background: transparent;
-        border: none;
-        color: var(--red);
-        cursor: pointer;
-        font-size: 1.2rem;
-        transition: all 0.3s ease;
-    }
-    
-    .added-workout-remove:hover {
-        transform: scale(1.2);
-    }
-    
-    .search-filter-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .search-workout-input {
-        background: rgba(42, 42, 42, 0.8);
-        border: 1px solid #444;
-        border-radius: 8px;
-        padding: 12px 16px;
-        color: #fff;
-        font-size: 1rem;
-        width: 100%;
-    }
-    
-    .search-workout-input::placeholder {
-        color: #666;
-    }
-    
-    .search-workout-input:focus {
-        outline: none;
-        border-color: var(--lime);
-        box-shadow: 0 0 12px rgba(164, 198, 40, 0.2);
-    }
-    
-    .filter-label {
-        color: #aaa;
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
+    .added-workout-name { color: #fff; font-weight: 600; font-size: 0.9rem; }
+    .btn-remove { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 1.1rem; }
+
     .available-workouts-list {
-        background: rgba(30, 30, 30, 0.8);
-        border: 1px solid #333;
-        border-radius: 8px;
-        padding: 1rem;
-        overflow-y: auto;
-        max-height: 400px;
+        background: rgba(30,30,30,0.8); border: 1px solid #333; border-radius: 8px;
+        padding: 1rem; overflow-y: auto; max-height: 300px; margin-top: 0.75rem;
     }
-    
     .available-workout-item {
-        background: rgba(42, 42, 42, 0.6);
-        border: 1px solid #333;
-        border-radius: 8px;
-        padding: 12px;
-        margin-bottom: 0.75rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
+        background: rgba(42,42,42,0.6); border: 1px solid #333; border-radius: 8px;
+        padding: 10px 12px; margin-bottom: 0.5rem;
+        display: flex; justify-content: space-between; align-items: center; gap: 1rem;
     }
-    
-    .available-workout-name {
-        color: #fff;
-        font-weight: 600;
-        flex: 1;
-    }
-    
-    .workout-action-buttons {
-        display: flex;
-        gap: 0.5rem;
-    }
-    
-    .btn-workout-action {
-        background: transparent;
-        border: 1px solid #444;
-        color: #aaa;
-        padding: 6px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.8rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-workout-action:hover {
-        border-color: var(--lime);
-        color: var(--lime);
-    }
-    
+    .available-workout-name { color: #fff; font-weight: 600; flex: 1; font-size: 0.9rem; }
     .btn-workout-add {
         background: linear-gradient(135deg, var(--orange), var(--red));
-        border: none;
-        color: #fff;
+        border: none; color: #fff; padding: 6px 14px; border-radius: 6px;
+        cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.3s ease;
     }
-    
-    .btn-workout-add:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(235, 131, 21, 0.3);
-    }
-    
+    .btn-workout-add:hover { transform: translateY(-1px); }
+    .btn-workout-add.added { background: linear-gradient(135deg, var(--lime), #91B623); color: #000; }
+
     .modal-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        padding: 1.5rem 2rem;
-        border-top: 1px solid #333;
-        background: rgba(0, 0, 0, 0.3);
+        display: flex; justify-content: flex-end; gap: 1rem;
+        padding: 1.5rem 2rem; border-top: 1px solid #333; background: rgba(0,0,0,0.3);
     }
-    
     .btn-modal-cancel {
-        background: rgba(42, 42, 42, 0.8);
-        border: 1px solid #444;
-        color: #aaa;
-        border-radius: 8px;
-        padding: 10px 24px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
+        background: rgba(42,42,42,0.8); border: 1px solid #444; color: #aaa;
+        border-radius: 8px; padding: 10px 24px; font-weight: 600; cursor: pointer;
     }
-    
-    .btn-modal-cancel:hover {
-        background: rgba(42, 42, 42, 1);
-        color: #fff;
-    }
-    
+    .btn-modal-cancel:hover { color: #fff; }
     .btn-modal-save {
         background: linear-gradient(135deg, var(--lime), #91B623);
-        border: none;
-        border-radius: 8px;
-        padding: 10px 24px;
-        color: #000;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
+        border: none; border-radius: 8px; padding: 10px 24px;
+        color: #000; font-weight: 700; cursor: pointer;
     }
-    
-    .btn-modal-save:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(164, 198, 40, 0.4);
-    }
+    .btn-modal-save:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(164,198,40,0.4); }
+    .empty-state { color: #666; text-align: center; padding: 2rem; font-size: 0.9rem; }
 </style>
 {% endblock %}
 
 {% block subpage_content %}
 <div style="background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); min-height: 100vh;">
-    <!-- Sticky Navigation Bar -->
     <div class="navbar-custom">
         <div class="navbar-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <span class="welcome-text" style="color: #fff; font-weight: 600; font-size: 0.95rem; white-space: nowrap;">Welcome, {{ user.username }}!</span>
+                <span style="color: #fff; font-weight: 600; font-size: 0.95rem;">Welcome, {{ user.username }}!</span>
             </div>
             <div class="navbar-header">
                 <div class="navbar-title-group">
@@ -596,166 +190,227 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="content-wrapper">
-        <!-- Header Section -->
-        <div class="page-header">
-            <div>
-                <h2 class="page-title">My Routines</h2>
-                <p class="page-subtitle">Manage and customize your workout routines</p>
-            </div>
-        </div>
-
-        <!-- Create Button -->
         <div style="margin-bottom: 2rem;">
-            <button class="btn-create" data-bs-toggle="modal" data-bs-target="#createRoutineModal">
-                + Create New Routine
-            </button>
+            <h2 class="page-title">My Routines</h2>
+            <p class="page-subtitle">Manage and customize your workout routines</p>
         </div>
 
-        <!-- Routines List -->
+        <div style="margin-bottom: 2rem;">
+            <button class="btn-create" onclick="openCreateModal()">+ Create New Routine</button>
+        </div>
+
         <div class="row g-4">
-        {% for routine in routines %}
-        <div class="col-md-6 col-lg-4">
-            <div class="routine-card">
-                <div class="routine-header">
-                    <h5 class="routine-name">{{ routine.name }}</h5>
-                </div>
-                <div class="routine-body">
-                    <p class="routine-description">{{ routine.description }}</p>
-                    <span class="routine-badge">{{ routine.workouts|length }} Workout{{ 's' if routine.workouts|length != 1 else '' }}</span>
-                    <ul class="routine-exercises">
-                        {% for rw in routine.workouts %}
-                        <li>✓ {{ rw.workout.name }}</li>
-                        {% endfor %}
-                        {% if not routine.workouts %}
-                        <li style="color: #666;">No workouts yet</li>
-                        {% endif %}
-                    </ul>
-                </div>
-                <div class="routine-footer">
-                    <a href="{{ url_for('edit_routine_view', routine_id=routine.id) }}" style="text-decoration: none;">
-                        <button class="btn-edit">Edit Routine</button>
-                    </a>
-                    <button class="btn-delete" data-routine-id="{{ routine.id }}">Delete</button>
+            {% for routine in routines %}
+            <div class="col-md-6 col-lg-4">
+                <div class="routine-card">
+                    <div class="routine-header">
+                        <h5 class="routine-name">{{ routine.name }}</h5>
+                    </div>
+                    <div class="routine-body">
+                        <p class="routine-description">{{ routine.description }}</p>
+                        <span class="routine-badge">{{ routine.workouts|length }} Workout{{ 's' if routine.workouts|length != 1 else '' }}</span>
+                        <ul class="routine-exercises">
+                            {% for rw in routine.workouts %}
+                            <li>✓ {{ rw.workout.name }}</li>
+                            {% endfor %}
+                            {% if not routine.workouts %}
+                            <li style="color: #666;">No workouts yet</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="routine-footer">
+                        <a href="{{ url_for('edit_routine_view', routine_id=routine.id) }}" style="text-decoration: none;">
+                            <button class="btn-edit" style="width:100%;">Edit Routine</button>
+                        </a>
+                        <button class="btn-delete" data-routine-id="{{ routine.id }}">Delete</button>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
+            {% if not routines %}
+            <div style="text-align: center; padding: 3rem;">
+                <p style="color: #aaa; font-size: 1.1rem;">No routines yet. Create one to get started!</p>
+            </div>
+            {% endif %}
         </div>
-        {% endfor %}
-        {% if not routines %}
-        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-            <p style="color: #aaa; font-size: 1.1rem;">No routines yet. Create one to get started!</p>
-        </div>
-        {% endif %}
     </div>
 </div>
 
 <!-- Create Routine Modal -->
-<div class="modal fade create-routine-modal" id="createRoutineModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create A New Routine</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            
-            <!-- Two Column Layout -->
-            <div class="modal-create-container">
-                <!-- Left Column: Routine Name & Added Workouts -->
-                <div class="create-routine-section">
-                    <!-- Routine Name Input -->
-                    <div>
-                        <h6 class="section-title">Routine Name</h6>
-                        <input type="text" class="routine-name-input" id="modalRoutineName" placeholder="Enter routine name...">
-                    </div>
-                    
-                    <!-- Added Workouts Section -->
-                    <div>
-                        <h6 class="section-title">Added Workouts</h6>
-                        <div class="added-workouts-list" id="addedWorkoutsList">
-                            <div style="color: #666; text-align: center; padding: 2rem; font-size: 0.9rem;">
-                                No workouts added yet
-                            </div>
-                        </div>
-                    </div>
+<div class="modal-overlay" id="createRoutineModal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h5>Create A New Routine</h5>
+            <button class="modal-close" onclick="closeCreateModal()">✕</button>
+        </div>
+        <div class="modal-grid">
+            <!-- Left: Name + Added Workouts -->
+            <div style="display:flex; flex-direction:column; gap:1.5rem;">
+                <div>
+                    <p class="section-title">Routine Name</p>
+                    <input type="text" class="routine-name-input" id="modalRoutineName" placeholder="Enter routine name...">
                 </div>
-                
-                <!-- Right Column: Search & Available Workouts -->
-                <div class="search-filter-container">
-                    <!-- Search Input -->
-                    <div>
-                        <h6 class="section-title">Search Workouts</h6>
-                        <input type="text" class="search-workout-input" id="modalSearchWorkout" placeholder="Search...">
-                    </div>
-                    
-                    <!-- Filter Label -->
-                    <p class="filter-label">Filter</p>
-                    
-                    <!-- Available Workouts List -->
-                    <div class="available-workouts-list" id="availableWorkoutsList">
-                        <!-- Workout 1 -->
-                        <div class="available-workout-item">
-                            <span class="available-workout-name">Workout #1</span>
-                            <div class="workout-action-buttons">
-                                <button class="btn-workout-action">View</button>
-                                <button class="btn-workout-action btn-workout-add">Add</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Workout 2 -->
-                        <div class="available-workout-item">
-                            <span class="available-workout-name">Workout #2</span>
-                            <div class="workout-action-buttons">
-                                <button class="btn-workout-action">View</button>
-                                <button class="btn-workout-action btn-workout-add">Add</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Workout 3 -->
-                        <div class="available-workout-item">
-                            <span class="available-workout-name">Workout #3</span>
-                            <div class="workout-action-buttons">
-                                <button class="btn-workout-action">View</button>
-                                <button class="btn-workout-action btn-workout-add">Add</button>
-                            </div>
-                        </div>
+                <div>
+                    <p class="section-title">Added Workouts</p>
+                    <div class="added-workouts-list" id="addedWorkoutsList">
+                        <div class="empty-state" id="emptyState">No workouts added yet</div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Modal Actions -->
-            <div class="modal-actions">
-                <button type="button" class="btn-modal-cancel" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn-modal-save">Save</button>
+            <!-- Right: Search + Available Workouts -->
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+                <div>
+                    <p class="section-title">Search Workouts</p>
+                    <input type="text" class="search-workout-input" id="modalSearchWorkout" placeholder="Search..." oninput="filterWorkouts()">
+                </div>
+                <div class="available-workouts-list" id="availableWorkoutsList">
+                    <div class="empty-state">Loading workouts...</div>
+                </div>
             </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal-cancel" onclick="closeCreateModal()">Cancel</button>
+            <button class="btn-modal-save" onclick="saveRoutine()">Save</button>
         </div>
     </div>
 </div>
 
 <script>
-    document.querySelectorAll('.btn-delete[data-routine-id]').forEach(button => {
-        button.addEventListener('click', function() {
-            deleteRoutine(parseInt(this.dataset.routineId));
-        });
-    });
+    let allWorkouts = [];
+    let addedWorkouts = [];
 
-    function deleteRoutine(routineId) {
-        if (confirm('Are you sure you want to delete this routine?')) {
-            fetch(`/api/routines/${routineId}`, {
-                method: 'DELETE'
-            }).then(response => {
-                if (response.ok) {
-                    alert('Routine deleted successfully');
-                    location.reload();
-                } else {
-                    alert('Failed to delete routine');
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Error deleting routine');
-            });
+    async function loadWorkouts() {
+        try {
+            const response = await fetch('/api/workouts');
+            allWorkouts = await response.json();
+            renderAvailableWorkouts(allWorkouts);
+        } catch (error) {
+            document.getElementById('availableWorkoutsList').innerHTML = '<div class="empty-state">Failed to load workouts</div>';
         }
     }
-</script>
 
+    function renderAvailableWorkouts(workouts) {
+        const list = document.getElementById('availableWorkoutsList');
+        if (workouts.length === 0) {
+            list.innerHTML = '<div class="empty-state">No workouts found</div>';
+            return;
+        }
+        list.innerHTML = workouts.map(w => {
+            const isAdded = addedWorkouts.some(a => a.id === w.id);
+            return `
+                <div class="available-workout-item">
+                    <span class="available-workout-name">${w.name}</span>
+                    <button class="btn-workout-add ${isAdded ? 'added' : ''}" 
+                        onclick="toggleWorkout(${w.id}, '${w.name.replace(/'/g, "\\'")}', this)">
+                        ${isAdded ? '✓ Added' : 'Add'}
+                    </button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function toggleWorkout(id, name, btn) {
+        const index = addedWorkouts.findIndex(w => w.id === id);
+        if (index === -1) {
+            addedWorkouts.push({ id, name });
+            btn.textContent = '✓ Added';
+            btn.classList.add('added');
+        } else {
+            addedWorkouts.splice(index, 1);
+            btn.textContent = 'Add';
+            btn.classList.remove('added');
+        }
+        renderAddedWorkouts();
+    }
+
+    function renderAddedWorkouts() {
+        const list = document.getElementById('addedWorkoutsList');
+        const empty = document.getElementById('emptyState');
+        if (addedWorkouts.length === 0) {
+            list.innerHTML = '<div class="empty-state" id="emptyState">No workouts added yet</div>';
+            return;
+        }
+        list.innerHTML = addedWorkouts.map(w => `
+            <div class="added-workout-item">
+                <span class="added-workout-name">${w.name}</span>
+                <button class="btn-remove" onclick="removeWorkout(${w.id})">✕</button>
+            </div>
+        `).join('');
+    }
+
+    function removeWorkout(id) {
+        addedWorkouts = addedWorkouts.filter(w => w.id !== id);
+        renderAddedWorkouts();
+        renderAvailableWorkouts(getFilteredWorkouts());
+    }
+
+    function getFilteredWorkouts() {
+        const query = document.getElementById('modalSearchWorkout').value.toLowerCase();
+        return allWorkouts.filter(w => w.name.toLowerCase().includes(query));
+    }
+
+    function filterWorkouts() {
+        renderAvailableWorkouts(getFilteredWorkouts());
+    }
+
+    async function saveRoutine() {
+        const name = document.getElementById('modalRoutineName').value.trim();
+        if (!name) { alert('Please enter a routine name.'); return; }
+        if (addedWorkouts.length === 0) { alert('Please add at least one workout.'); return; }
+
+        try {
+            // Create the routine
+            const routineRes = await fetch('/api/routines', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, description: '', user_id: 0 })
+            });
+
+            if (!routineRes.ok) { alert('Failed to create routine.'); return; }
+            const routine = await routineRes.json();
+
+            // Add each workout to the routine
+            for (const workout of addedWorkouts) {
+                await fetch(`/api/routines/${routine.id}/workouts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ workout_id: workout.id, sets: 3, reps: 10 })
+                });
+            }
+
+            alert('Routine created successfully!');
+            closeCreateModal();
+            location.reload();
+        } catch (error) {
+            alert('Error creating routine.');
+        }
+    }
+
+    function openCreateModal() {
+        addedWorkouts = [];
+        document.getElementById('modalRoutineName').value = '';
+        document.getElementById('modalSearchWorkout').value = '';
+        document.getElementById('addedWorkoutsList').innerHTML = '<div class="empty-state">No workouts added yet</div>';
+        document.getElementById('createRoutineModal').classList.add('active');
+        loadWorkouts();
+    }
+
+    function closeCreateModal() {
+        document.getElementById('createRoutineModal').classList.remove('active');
+    }
+
+    // Delete routine
+    document.querySelectorAll('.btn-delete[data-routine-id]').forEach(button => {
+        button.addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete this routine?')) {
+                fetch(`/api/routines/${this.dataset.routineId}`, { method: 'DELETE' })
+                    .then(res => {
+                        if (res.ok) { location.reload(); }
+                        else { alert('Failed to delete routine.'); }
+                    });
+            }
+        });
+    });
+</script>
 {% endblock %}
