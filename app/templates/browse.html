@@ -31,10 +31,17 @@
             <div class="card-header bg-light text-center py-3">
                 <h5 class="mb-0">{{ workout.name }}</h5>
             </div>
+
+            <div class="px-3 pt-3 text-center">
+                {% if workout.image_url %}
+                    <img src="{{ workout.image_url }}" class="card-img-top p-3" alt="{{ workout.name }}" style="max-height: 200px; object-fit: contain;">
+                {% else %}
+                    <div style="font-size: 4rem; margin: 1rem 0;">🏋️‍♂️</div>
+                {% endif %}
+            </div>
+
             <div class="card-body">
-                <p class="badge bg-primary">{{ workout.category }}</p>
                 <p class="badge bg-secondary">{{ workout.muscle_group }}</p>
-                <p class="badge bg-info text-dark">{{ workout.difficulty }}</p>
                 <p class="card-text text-muted mt-2">{{ workout.description | striptags | truncate(100) }}</p>
             </div>
             <div class="card-footer bg-light d-grid gap-2">
@@ -53,8 +60,30 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
         card.style.display = name.includes(query) ? 'block' : 'none';
     });
 });
+
+async function addToRoutine(workoutId) {
+    try {
+        const response = await fetch(`/api/routines/${routine_id}/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ workout_id: workoutId })
+        });
+        if (response.ok) {
+            alert('Workout added to routine!');
+        } else {
+            alert('Failed to add workout.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while adding the workout.');
+    }
+}
+
+
+
+
 </script>
-        <!-- Chest Workout Card -->
+        <!-- Chest Workout Card
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-header bg-light text-center py-3">
@@ -70,7 +99,7 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
             </div>
         </div>
 
-        <!-- LEG WORKOUT Card -->
+         LEG WORKOUT Card
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-header bg-light text-center py-3">
@@ -86,7 +115,7 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
             </div>
         </div>
 
-        <!-- Back Workout Card -->
+         Back Workout Card
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-header bg-light text-center py-3">
@@ -102,7 +131,7 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
             </div>
         </div>
 
-        <!-- Arm Workout Card -->
+         Arm Workout Card
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-header bg-light text-center py-3">
@@ -118,7 +147,7 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
             </div>
         </div>
 
-        <!-- Custom Workout Card -->
+        Custom Workout Card
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-header bg-light text-center py-3">
@@ -134,6 +163,6 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 {% endblock %}

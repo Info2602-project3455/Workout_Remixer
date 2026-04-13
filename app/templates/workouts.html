@@ -375,8 +375,8 @@
                         <div class="routine-exercise-item" data-workout-id="{{ rw.workout.id }}" data-routine-workout-id="{{ rw.id }}">
                             <span class="exercise-name">{{ rw.workout.name }}</span>
                             <div class="exercise-buttons">
-                                <button class="btn-swap" onclick="markForSwap({{ rw.id }}, '{{ rw.workout.name }}')">Swap</button>
-                                <button class="btn-delete" onclick="markForDelete({{ rw.id }})">Delete</button>
+                                <button class="btn-swap" onclick="markForSwap('{{ rw.id }}', '{{ rw.workout.name }}' )">Swap</button>
+                                <button class="btn-delete" onclick="markForDelete('{{ rw.id }}')">Delete</button>
                             </div>
                         </div>
                         {% endfor %}
@@ -403,8 +403,8 @@
                         <div class="workout-card" data-workout-id="{{ workout.id }}" data-name="{{ workout.name.lower() }}" data-category="{{ workout.category.lower() }}">
                             <div class="workout-card-title">{{ workout.name }}</div>
                             <div class="workout-card-buttons">
-                                <button class="btn-view" onclick="viewWorkout({{ workout.id }}, '{{ workout.name }}')">View</button>
-                                <button class="btn-action" data-action="add" onclick="addWorkout({{ workout.id }}, '{{ workout.name }}')">Add</button>
+                                <button class="btn-view" onclick="viewWorkout('{{ workout.id }}', '{{ workout.name }}')">View</button>
+                                <button class="btn-action" data-action="add" onclick="addWorkout('{{ workout.id }}', '{{ workout.name }}')">Add</button>
                             </div>
                         </div>
                         {% endfor %}
@@ -424,7 +424,7 @@
 {% endblock %}
 
 <script>
-    const routine_id = {{ routine.id }};
+    const routine_id = '{{ routine.id }}';
     let pendingChanges = {
         toAdd: [],
         toDelete: [],

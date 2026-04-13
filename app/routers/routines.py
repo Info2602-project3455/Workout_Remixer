@@ -77,15 +77,21 @@ async def delete_routine(routine_id: int, db: SessionDep, user: AuthDep):
     return {"message": "Routine deleted"}
 
 @api_router.post("/{routine_id}/workouts")
-async def add_workout_to_routine(routine_id: int, workout_data: AddWorkoutRequest, db: SessionDep, user: AuthDep):
+async def add_workout_to_routine(    
+    routine_id:int,
+    workout_data: AddWorkoutRequest,
+    db: SessionDep,
+    user: AuthDep
+):
+    
     routine = db.get(Routine, routine_id)
     if not routine or routine.user_id != user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
     
     link = RoutineWorkout(
-        routine_id=routine_id, 
-        workout_id=workout_data.workout_id, 
-        sets=workout_data.sets, 
+        routine_id=routine_id,
+        workout_id=workout_data.workout_id,
+        sets=workout_data.sets,
         reps=workout_data.reps
     )
     db.add(link)

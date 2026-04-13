@@ -10,9 +10,12 @@ class Workout(SQLModel, table=True):
     description: str
     category: str
     difficulty: str
-    muscle_group: str
-
+    muscle_group: str = Field(default="Full Body")
+    image_url: Optional[str] = Field(default=None)
+    
     routine_links: List["RoutineWorkout"] = Relationship(back_populates="workout")
+
+
 
 
 class Routine(SQLModel, table=True):
@@ -21,7 +24,8 @@ class Routine(SQLModel, table=True):
     description: str
     user_id: int = Field(foreign_key="user.id")
     created_at: datetime = Field(default_factory=datetime.utcnow)
-
+    
+    
     user: Optional[User] = Relationship(back_populates="routines")
     workouts: List["RoutineWorkout"] = Relationship(back_populates="routine")
 
@@ -35,3 +39,5 @@ class RoutineWorkout(SQLModel, table=True):
 
     routine: Optional[Routine] = Relationship(back_populates="workouts")
     workout: Optional[Workout] = Relationship(back_populates="routine_links")
+
+

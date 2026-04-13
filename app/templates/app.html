@@ -272,6 +272,18 @@
         outline: none;
         border-color: var(--lime);
     }
+
+    .workout-image {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        background-color: #2a2a2a;
+    }
+
+
+
 </style>
 {% endblock %}
 
@@ -321,140 +333,29 @@
 
         <!-- Workouts Grid -->
         <div class="workout-grid">
-            <!-- Workout 1 -->
+            {% for workout in workouts %}
             <div class="workout-card">
-                <div class="workout-icon">💪</div>
-                <h3 class="workout-name">Bicep Curls</h3>
+              <div class= "workout-icon">
+                {% if workout.image_url %}
+                    <img src="{{ workout.image_url }}" alt="{{ workout.name }} image" class="workout-image">
+                {% else %}
+                    <div class="workout-image" style="display: flex; align-items: center; justify-content: center; color: #555; font-size: 2rem;">
+                        🏋️
+                    </div>
+                {% endif %}
+              </div>
+                <h3 class="workout-name">{{ workout.name }}</h3>
                 <div class="workout-meta">
-                    <span>Arms</span>
+                    <span>{{workout.muscle_group}}</span>
                     <span>15 min</span>
                 </div>
-                <p class="workout-description">Effective arm strengthening exercise targeting biceps. Build muscle definition and strength.</p>
+                <p class="workout-description">{{ workout.description | striptags | truncate(100) }}</p>
                 <div class="workout-actions">
                     <button class="btn-view">View</button>
                     <button class="btn-add">Add to Routine</button>
                 </div>
             </div>
-
-            <!-- Workout 2 -->
-            <div class="workout-card">
-                <div class="workout-icon">🏋️</div>
-                <h3 class="workout-name">Chest Press</h3>
-                <div class="workout-meta">
-                    <span>Chest</span>
-                    <span>20 min</span>
-                </div>
-                <p class="workout-description">Build chest strength with this classic pressing motion. Excellent for upper body development.</p>
-                <div class="workout-actions">
-                    <button class="btn-view">View</button>
-                    <button class="btn-add">Add to Routine</button>
-                </div>
-            </div>
-
-            <!-- Workout 3 -->
-            <div class="workout-card">
-                <div class="workout-icon">🦵</div>
-                <h3 class="workout-name">Squats</h3>
-                <div class="workout-meta">
-                    <span>Legs</span>
-                    <span>20 min</span>
-                </div>
-                <p class="workout-description">Power-building lower body exercise. Essential for leg strength and endurance training.</p>
-                <div class="workout-actions">
-                    <button class="btn-view">View</button>
-                    <button class="btn-add">Add to Routine</button>
-                </div>
-            </div>
-
-            <!-- Workout 4 -->
-            <div class="workout-card">
-                <div class="workout-icon">🧗</div>
-                <h3 class="workout-name">Deadlifts</h3>
-                <div class="workout-meta">
-                    <span>Back</span>
-                    <span>25 min</span>
-                </div>
-                <p class="workout-description">Compound movement that works multiple muscle groups. Essential for full-body strength.</p>
-                <div class="workout-actions">
-                    <button class="btn-view">View</button>
-                    <button class="btn-add">Add to Routine</button>
-                </div>
-            </div>
-
-            <!-- Workout 5 -->
-            <div class="workout-card">
-                <div class="workout-icon">🏃</div>
-                <h3 class="workout-name">Running</h3>
-                <div class="workout-meta">
-                    <span>Cardio</span>
-                    <span>30 min</span>
-                </div>
-                <p class="workout-description">High-intensity cardio workout for cardiovascular health and stamina building.</p>
-                <div class="workout-actions">
-                    <button class="btn-view">View</button>
-                    <button class="btn-add">Add to Routine</button>
-                </div>
-            </div>
-
-            <!-- Workout 6 -->
-            <div class="workout-card">
-                <div class="workout-icon">🦾</div>
-                <h3 class="workout-name">Pull-ups</h3>
-                <div class="workout-meta">
-                    <span>Back</span>
-                    <span>15 min</span>
-                </div>
-                <p class="workout-description">Upper body strength exercise targeting back and shoulders. Builds functional strength.</p>
-                <div class="workout-actions">
-                    <button class="btn-view">View</button>
-                    <button class="btn-add">Add to Routine</button>
-                </div>
-            </div>
-
-            <!-- Workout 7 -->
-            <div class="workout-card">
-                <div class="workout-icon">📦</div>
-                <h3 class="workout-name">Plank Hold</h3>
-                <div class="workout-meta">
-                    <span>Core</span>
-                    <span>10 min</span>
-                </div>
-                <p class="workout-description">Core strengthening exercise for stability and endurance. Great for overall body stability.</p>
-                <div class="workout-actions">
-                    <button class="btn-view">View</button>
-                    <button class="btn-add">Add to Routine</button>
-                </div>
-            </div>
-
-            <!-- Workout 8 -->
-            <div class="workout-card">
-                <div class="workout-icon">🛋️</div>
-                <h3 class="workout-name">Bench Press</h3>
-                <div class="workout-meta">
-                    <span>Chest</span>
-                    <span>20 min</span>
-                </div>
-                <p class="workout-description">Classic upper body exercise using bench equipment. Excellent for chest and triceps.</p>
-                <div class="workout-actions">
-                    <button class="btn-view">View</button>
-                    <button class="btn-add">Add to Routine</button>
-                </div>
-            </div>
-
-            <!-- Workout 9 -->
-            <div class="workout-card">
-                <div class="workout-icon">🦗</div>
-                <h3 class="workout-name">Leg Press</h3>
-                <div class="workout-meta">
-                    <span>Legs</span>
-                    <span>20 min</span>
-                </div>
-                <p class="workout-description">Machine-based leg exercise for safe lower body training. Builds leg strength safely.</p>
-                <div class="workout-actions">
-                    <button class="btn-view">View</button>
-                    <button class="btn-add">Add to Routine</button>
-                </div>
-            </div>
+            {% endfor %}            
         </div>
     </div>
 </div>
