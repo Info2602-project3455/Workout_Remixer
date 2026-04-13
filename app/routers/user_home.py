@@ -1,11 +1,9 @@
-from fastapi import APIRouter, HTTPException, Depends, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi import status
+from fastapi import Request
+from fastapi.responses import HTMLResponse
 from app.dependencies.session import SessionDep
-from app.dependencies.auth import AuthDep, IsUserLoggedIn, get_current_user, is_admin
-from app.models import Workout
-from sqlmodel import select
+from app.dependencies.auth import AuthDep
 from . import router, templates
+from app.services.workout_service import fetch_workouts_from_api
 
 
 @router.get("/app", response_class=HTMLResponse)
@@ -14,9 +12,10 @@ async def user_home_view(
     user: AuthDep,
     db: SessionDep
 ):
-    workouts = db.exec(select(Workout)).all()
+    workouts = await fetch_workouts_from_api()
+
     return templates.TemplateResponse(
-        request=request, 
+        request=request,
         name="app.html",
         context={
             "user": user,
