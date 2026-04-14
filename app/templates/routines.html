@@ -4,18 +4,18 @@
 
 {% block internal_css %}
 <style>
-    body {
-        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    :root { 
+    :root {
         --red: #D6361A;
         --orange: #EB8315;
         --lime: #A4C628;
         --dark-purple: #531B66;
     }
-    
+
+    body {
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
     .navbar-custom {
         background: rgba(20, 20, 20, 0.95);
         border-bottom: 2px solid var(--lime);
@@ -25,14 +25,15 @@
         backdrop-filter: blur(10px);
         padding: 1rem 2rem;
     }
-    
+
     .navbar-content { max-width: 1400px; margin: 0 auto; }
     .navbar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
     .navbar-title-group { flex: 1; }
-    .page-title { font-size: 1.8rem; font-weight: 700; color: var(--lime); margin: 0 0 0.2rem 0; }
+    .page-title { font-size: 1.8rem; font-weight: 700; color: var(--lime); margin: 0 0 0.2rem 0; cursor: pointer; transition: all 0.3s ease; }
+    .page-title:hover { transform: translateX(4px); }
     .page-subtitle { color: #aaa; font-size: 0.85rem; margin: 0; }
     .nav-group { display: flex; gap: 10px; align-items: center; }
-    
+
     .nav-btn {
         border-radius: 50px; padding: 8px 20px; border: none;
         font-weight: 600; font-size: 13px; transition: all 0.3s ease;
@@ -58,31 +59,26 @@
     .routine-card {
         background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
         border: 1px solid #333; border-radius: 16px; overflow: hidden;
-        transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column;
+        transition: all 0.3s ease; display: flex; flex-direction: column;
     }
     .routine-card:hover { border-color: var(--lime); box-shadow: 0 8px 24px rgba(164, 198, 40, 0.15); }
     .routine-header { background: linear-gradient(135deg, #2a2a2a 0%, #323232 100%); padding: 1.5rem; border-bottom: 1px solid #333; }
     .routine-name { font-size: 1.25rem; font-weight: 700; color: #fff; margin: 0; }
     .routine-body { padding: 1.5rem; flex-grow: 1; }
     .routine-description { color: #aaa; margin-bottom: 1rem; font-size: 0.9rem; }
-    .routine-badge {
-        display: inline-block;
-        background: linear-gradient(135deg, var(--orange), var(--red));
-        color: #fff; padding: 6px 16px; border-radius: 20px;
-        font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
-    }
+    .routine-badge { display: inline-block; background: linear-gradient(135deg, var(--orange), var(--red)); color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem; }
     .routine-exercises { list-style: none; padding: 0; margin: 0; }
     .routine-exercises li { color: #bbb; font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid #333; }
     .routine-exercises li:last-child { border-bottom: none; }
     .routine-footer { padding: 1.5rem; background: rgba(0,0,0,0.2); border-top: 1px solid #333; display: grid; gap: 0.75rem; }
-    
-    .btn-edit {
+
+    .btn-edit, .btn-view {
         background: linear-gradient(135deg, var(--lime), #91B623);
         border: none; border-radius: 8px; padding: 10px 16px;
         color: #000; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;
     }
-    .btn-edit:hover { transform: translateY(-2px); }
-    
+    .btn-edit:hover, .btn-view:hover { transform: translateY(-2px); }
+
     .btn-delete {
         background: rgba(214, 54, 26, 0.2); border: 1px solid var(--red);
         border-radius: 8px; padding: 10px 16px; color: var(--red);
@@ -90,82 +86,113 @@
     }
     .btn-delete:hover { background: var(--red); color: #fff; }
 
-    /* Modal */
+    /* Modals */
     .modal-overlay {
         display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center;
+        background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center;
+        backdrop-filter: blur(5px);
     }
     .modal-overlay.active { display: flex; }
+
     .modal-box {
         background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
-        border: 1px solid #333; border-radius: 16px; width: 90%; max-width: 900px;
+        border: 1px solid #333; border-radius: 16px; width: 95%; max-width: 1100px;
         max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
     }
-    .modal-head {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 1.5rem 2rem; border-bottom: 1px solid #333; background: rgba(0,0,0,0.3);
-    }
-    .modal-head h5 { color: #fff; font-weight: 700; margin: 0; font-size: 1.2rem; }
-    .modal-close { background: transparent; border: none; color: #aaa; font-size: 1.5rem; cursor: pointer; }
-    .modal-close:hover { color: #fff; }
-    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 2rem; overflow-y: auto; }
-    .section-title { font-size: 0.85rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 0.75rem 0; }
 
-    .routine-name-input, .search-workout-input {
+    .modal-header {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 2rem; border-bottom: 1px solid #333; background: rgba(0,0,0,0.3);
+    }
+    .modal-title { color: #fff; font-weight: 700; margin: 0; font-size: 1.3rem; }
+    .modal-close { background: transparent; border: none; color: #aaa; font-size: 1.8rem; cursor: pointer; transition: all 0.3s ease; }
+    .modal-close:hover { color: #fff; transform: rotate(90deg); }
+
+    .modal-content {
+        padding: 2rem; flex-grow: 1; overflow-y: auto;
+        display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+    }
+
+    .modal-section { display: flex; flex-direction: column; }
+    .modal-section-title { font-size: 0.9rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 1rem 0; }
+
+    .input-field {
         background: rgba(42,42,42,0.8); border: 1px solid #444; border-radius: 8px;
-        padding: 12px 16px; color: #fff; font-size: 1rem; width: 100%;
+        padding: 12px 16px; color: #fff; font-size: 1rem; width: 100%; margin-bottom: 1rem;
     }
-    .routine-name-input::placeholder, .search-workout-input::placeholder { color: #666; }
-    .routine-name-input:focus, .search-workout-input:focus {
-        outline: none; border-color: var(--lime); box-shadow: 0 0 12px rgba(164,198,40,0.2);
+    .input-field::placeholder { color: #666; }
+    .input-field:focus { outline: none; border-color: var(--lime); box-shadow: 0 0 12px rgba(164,198,40,0.2); }
+
+    .workout-container {
+        background: rgba(30,30,30,0.8); border: 1px solid #333; border-radius: 8px;
+        padding: 1rem; min-height: 200px; overflow-y: auto; max-height: 400px;
     }
 
-    .added-workouts-list {
-        background: rgba(30,30,30,0.8); border: 1px solid #333; border-radius: 8px;
-        padding: 1rem; min-height: 250px; overflow-y: auto;
-    }
-    .added-workout-item {
-        background: rgba(42,42,42,0.6); border-left: 3px solid var(--lime);
-        padding: 10px 12px; margin-bottom: 0.5rem; border-radius: 4px;
-        display: flex; justify-content: space-between; align-items: center;
-    }
-    .added-workout-name { color: #fff; font-weight: 600; font-size: 0.9rem; }
-    .btn-remove { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 1.1rem; }
-
-    .available-workouts-list {
-        background: rgba(30,30,30,0.8); border: 1px solid #333; border-radius: 8px;
-        padding: 1rem; overflow-y: auto; max-height: 300px; margin-top: 0.75rem;
-    }
-    .available-workout-item {
+    .workout-item {
         background: rgba(42,42,42,0.6); border: 1px solid #333; border-radius: 8px;
-        padding: 10px 12px; margin-bottom: 0.5rem;
-        display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+        padding: 12px; margin-bottom: 0.75rem; display: flex;
+        justify-content: space-between; align-items: center;
     }
-    .available-workout-name { color: #fff; font-weight: 600; flex: 1; font-size: 0.9rem; }
-    .btn-workout-add {
-        background: linear-gradient(135deg, var(--orange), var(--red));
-        border: none; color: #fff; padding: 6px 14px; border-radius: 6px;
-        cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.3s ease;
-    }
-    .btn-workout-add:hover { transform: translateY(-1px); }
-    .btn-workout-add.added { background: linear-gradient(135deg, var(--lime), #91B623); color: #000; }
+    .workout-item-name { color: #fff; font-weight: 600; font-size: 0.9rem; flex: 1; }
+    .workout-item-actions { display: flex; gap: 0.5rem; }
 
-    .modal-actions {
-        display: flex; justify-content: flex-end; gap: 1rem;
-        padding: 1.5rem 2rem; border-top: 1px solid #333; background: rgba(0,0,0,0.3);
+    .btn-small {
+        background: transparent; border: 1px solid #444; color: #aaa;
+        padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;
+        font-weight: 600; transition: all 0.3s ease;
     }
-    .btn-modal-cancel {
+    .btn-small:hover { border-color: var(--lime); color: var(--lime); }
+    .btn-small-add {
+        background: linear-gradient(135deg, var(--orange), var(--red));
+        border: none; color: #fff;
+    }
+    .btn-small-add:hover { transform: translateY(-1px); }
+    .btn-small-danger { border-color: var(--red); color: var(--red); }
+    .btn-small-danger:hover { background: var(--red); color: #fff; }
+
+    .modal-footer {
+        display: flex; justify-content: flex-end; gap: 1rem;
+        padding: 2rem; border-top: 1px solid #333; background: rgba(0,0,0,0.3);
+    }
+    .btn-cancel {
         background: rgba(42,42,42,0.8); border: 1px solid #444; color: #aaa;
         border-radius: 8px; padding: 10px 24px; font-weight: 600; cursor: pointer;
     }
-    .btn-modal-cancel:hover { color: #fff; }
-    .btn-modal-save {
+    .btn-cancel:hover { color: #fff; }
+    .btn-save {
         background: linear-gradient(135deg, var(--lime), #91B623);
         border: none; border-radius: 8px; padding: 10px 24px;
         color: #000; font-weight: 700; cursor: pointer;
     }
-    .btn-modal-save:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(164,198,40,0.4); }
+    .btn-save:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(164,198,40,0.4); }
+
     .empty-state { color: #666; text-align: center; padding: 2rem; font-size: 0.9rem; }
+
+    /* Workout Detail Modal */
+    .workout-detail-modal .modal-content {
+        display: flex; flex-direction: column; grid-template-columns: none;
+    }
+    .workout-image { width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; margin-bottom: 1.5rem; }
+    .workout-title { font-size: 1.5rem; font-weight: 700; color: #fff; margin: 0 0 0.5rem 0; }
+    .workout-muscle { display: inline-block; background: linear-gradient(135deg, var(--orange), var(--red)); color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+    .workout-desc { color: #bbb; font-size: 0.95rem; line-height: 1.6; }
+
+    .toast {
+        position: fixed; bottom: 2rem; right: 2rem;
+        background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
+        border: 1px solid #444; border-left: 4px solid var(--lime);
+        padding: 1rem 1.5rem; border-radius: 8px; color: #fff;
+        max-width: 300px; z-index: 10001; display: none;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    .toast.show { display: block; animation: slideIn 0.3s ease; }
+    .toast.error { border-left-color: var(--red); }
+
+    @keyframes slideIn {
+        from { transform: translateX(400px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
 </style>
 {% endblock %}
 
@@ -178,8 +205,8 @@
             </div>
             <div class="navbar-header">
                 <div class="navbar-title-group">
-                    <h1 class="page-title">Workout Remixer</h1>
-                    <p class="page-subtitle">Build, customize, and remix your perfect workout routine</p>
+                    <h1 class="page-title" id="pageTitle" style="cursor: pointer;" data-href="{{ url_for('index_view') }}">Workout Remixer</h1>
+                    <p class="page-subtitle">Build and customize your workout routines</p>
                 </div>
                 <div class="nav-group">
                     <a href="{{ url_for('user_home_view') }}" class="nav-btn nav-btn-inactive">Browse Workouts</a>
@@ -193,14 +220,14 @@
     <div class="content-wrapper">
         <div style="margin-bottom: 2rem;">
             <h2 class="page-title">My Routines</h2>
-            <p class="page-subtitle">Manage and customize your workout routines</p>
+            <p style="color: #aaa; margin: 0;">Manage and customize your workout routines</p>
         </div>
 
         <div style="margin-bottom: 2rem;">
-            <button class="btn-create" onclick="openCreateModal()">+ Create New Routine</button>
+            <button class="btn-create" id="btnCreateRoutine">+ Create New Routine</button>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4" id="routinesContainer">
             {% for routine in routines %}
             <div class="col-md-6 col-lg-4">
                 <div class="routine-card">
@@ -208,7 +235,7 @@
                         <h5 class="routine-name">{{ routine.name }}</h5>
                     </div>
                     <div class="routine-body">
-                        <p class="routine-description">{{ routine.description }}</p>
+                        <p class="routine-description">{{ routine.description or 'No description' }}</p>
                         <span class="routine-badge">{{ routine.workouts|length }} Workout{{ 's' if routine.workouts|length != 1 else '' }}</span>
                         <ul class="routine-exercises">
                             {% for rw in routine.workouts %}
@@ -220,16 +247,14 @@
                         </ul>
                     </div>
                     <div class="routine-footer">
-                        <a href="{{ url_for('edit_routine_view', routine_id=routine.id) }}" style="text-decoration: none;">
-                            <button class="btn-edit" style="width:100%;">Edit Routine</button>
-                        </a>
-                        <button class="btn-delete" data-routine-id="{{ routine.id }}">Delete</button>
+                        <button class="btn-edit" data-routine-id="{{ routine.id }}" onclick="openEditRoutineModal(this.dataset.routineId)">Edit Routine</button>
+                        <button class="btn-delete" data-routine-id="{{ routine.id }}" onclick="deleteRoutine(this.dataset.routineId)">Delete</button>
                     </div>
                 </div>
             </div>
             {% endfor %}
             {% if not routines %}
-            <div style="text-align: center; padding: 3rem;">
+            <div style="text-align: center; padding: 3rem; width: 100%;">
                 <p style="color: #aaa; font-size: 1.1rem;">No routines yet. Create one to get started!</p>
             </div>
             {% endif %}
@@ -240,180 +265,490 @@
 <!-- Create Routine Modal -->
 <div class="modal-overlay" id="createRoutineModal">
     <div class="modal-box">
-        <div class="modal-head">
-            <h5>Create A New Routine</h5>
-            <button class="modal-close" onclick="closeCreateModal()">✕</button>
+        <div class="modal-header">
+            <h2 class="modal-title">Create A New Routine</h2>
+            <button class="modal-close" onclick="closeCreateRoutineModal()">✕</button>
         </div>
-        <div class="modal-grid">
-            <!-- Left: Name + Added Workouts -->
-            <div style="display:flex; flex-direction:column; gap:1.5rem;">
-                <div>
-                    <p class="section-title">Routine Name</p>
-                    <input type="text" class="routine-name-input" id="modalRoutineName" placeholder="Enter routine name...">
-                </div>
-                <div>
-                    <p class="section-title">Added Workouts</p>
-                    <div class="added-workouts-list" id="addedWorkoutsList">
-                        <div class="empty-state" id="emptyState">No workouts added yet</div>
-                    </div>
+        <div class="modal-content">
+            <!-- Left side: Routine name + added workouts -->
+            <div class="modal-section">
+                <p class="modal-section-title">Routine Details</p>
+                <input type="text" id="createRoutineName" class="input-field" placeholder="Routine Name">
+                <input type="text" id="createRoutineDesc" class="input-field" placeholder="Description (optional)">
+
+                <p class="modal-section-title" style="margin-top: 1.5rem;">Added Workouts</p>
+                <div class="workout-container" id="createAddedWorkoutsList">
+                    <div class="empty-state">No workouts added yet</div>
                 </div>
             </div>
-            <!-- Right: Search + Available Workouts -->
-            <div style="display:flex; flex-direction:column; gap:1rem;">
-                <div>
-                    <p class="section-title">Search Workouts</p>
-                    <input type="text" class="search-workout-input" id="modalSearchWorkout" placeholder="Search..." oninput="filterWorkouts()">
-                </div>
-                <div class="available-workouts-list" id="availableWorkoutsList">
-                    <div class="empty-state">Loading workouts...</div>
+
+            <!-- Right side: Search + results -->
+            <div class="modal-section">
+                <p class="modal-section-title">Search Workouts</p>
+                <input type="text" id="createSearchInput" class="input-field" placeholder="Search workouts...">
+                <div class="workout-container" id="createSearchResults" style="margin-top: 0;">
+                    <div class="empty-state">Search for workouts to add</div>
                 </div>
             </div>
         </div>
-        <div class="modal-actions">
-            <button class="btn-modal-cancel" onclick="closeCreateModal()">Cancel</button>
-            <button class="btn-modal-save" onclick="saveRoutine()">Save</button>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeCreateRoutineModal()">Cancel</button>
+            <button class="btn-save" onclick="saveNewRoutine()">Save Routine</button>
         </div>
     </div>
 </div>
 
-<script>
-    let allWorkouts = [];
-    let addedWorkouts = [];
+<!-- Edit Routine Modal -->
+<div class="modal-overlay" id="editRoutineModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2 class="modal-title">Edit Routine</h2>
+            <button class="modal-close" onclick="closeEditRoutineModal()">✕</button>
+        </div>
+        <div class="modal-content">
+            <!-- Left side: Current workouts -->
+            <div class="modal-section">
+                <p class="modal-section-title">Currently Editing Routine #<span id="editRoutineNumber">1</span></p>
+                <div class="workout-container" id="editCurrentWorkoutsList">
+                    <div class="empty-state">No workouts in routine</div>
+                </div>
+            </div>
 
-    async function loadWorkouts() {
-        try {
-            const response = await fetch('/api/workouts');
-            allWorkouts = await response.json();
-            renderAvailableWorkouts(allWorkouts);
-        } catch (error) {
-            document.getElementById('availableWorkoutsList').innerHTML = '<div class="empty-state">Failed to load workouts</div>';
+            <!-- Right side: Search + add -->
+            <div class="modal-section">
+                <p class="modal-section-title">Search Workouts</p>
+                <input type="text" id="editSearchInput" class="input-field" placeholder="Search workouts..." onkeyup="searchWorkoutsForEdit()">
+                <div class="workout-container" id="editSearchResults" style="margin-top: 0;">
+                    <div class="empty-state">Search for workouts to add</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeEditRoutineModal()">Cancel</button>
+            <button class="btn-save" onclick="saveEditRoutine()">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<!-- Workout Detail Modal -->
+<div class="modal-overlay workout-detail-modal" id="workoutDetailModal">
+    <div class="modal-box" style="max-width: 700px;">
+        <div class="modal-header">
+            <h2 class="modal-title">Workout Details</h2>
+            <button class="modal-close" onclick="closeWorkoutDetailModal()">✕</button>
+        </div>
+        <div class="modal-content" style="display: block; grid-template-columns: none;">
+            <div style="display: flex; align-items: flex-start; gap: 2rem;">
+                <div style="flex: 1;">
+                    <img id="detailWorkoutImage" class="workout-image" src="" alt="" style="width: 200px; height: 200px; object-fit: contain; border-radius: 8px; background: rgba(42,42,42,0.8); padding: 1rem;">
+                </div>
+                <div style="flex: 1.5;">
+                    <h3 class="workout-title" id="detailWorkoutTitle" style="margin-bottom: 1rem;"></h3>
+                    <span class="workout-muscle" id="detailWorkoutMuscle" style="display: block; margin-bottom: 1rem;"></span>
+                    <p class="workout-desc" id="detailWorkoutDesc"></p>
+                    <div style="margin-top: 1.5rem; font-size: 0.9rem; color: #aaa;">
+                        <p style="margin: 0.5rem 0;"><strong>Category:</strong> <span id="detailWorkoutCategory"></span></p>
+                        <p style="margin: 0.5rem 0;"><strong>Difficulty:</strong> <span id="detailWorkoutDifficulty"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeWorkoutDetailModal()">Close</button>
+            <button class="btn-save" id="addWorkoutBtn" onclick="addWorkoutFromDetail()">Add to Routine</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+    <div id="toastMessage"></div>
+</div>
+
+<script>
+    // Navigate to home when clicking page title
+    document.addEventListener('DOMContentLoaded', function() {
+        const pageTitle = document.getElementById('pageTitle');
+        if (pageTitle) {
+            pageTitle.addEventListener('click', function() {
+                window.location = this.dataset.href;
+            });
         }
+    });
+
+    const currentRoutineState = {
+        id: null,
+        addedWorkouts: [],
+        editingWorkouts: []
+    };
+
+    function showToast(message, isError = false) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toastMessage').textContent = message;
+        toast.classList.remove('error');
+        if (isError) toast.classList.add('error');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    function renderAvailableWorkouts(workouts) {
-        const list = document.getElementById('availableWorkoutsList');
-        if (workouts.length === 0) {
-            list.innerHTML = '<div class="empty-state">No workouts found</div>';
+    // ========== CREATE ROUTINE ==========
+    document.getElementById('btnCreateRoutine').addEventListener('click', openCreateRoutineModal);
+
+    function openCreateRoutineModal() {
+        currentRoutineState.addedWorkouts = [];
+        document.getElementById('createRoutineName').value = '';
+        document.getElementById('createRoutineDesc').value = '';
+        document.getElementById('createSearchInput').value = '';
+        document.getElementById('createAddedWorkoutsList').innerHTML = '<div class="empty-state">No workouts added yet</div>';
+        document.getElementById('createSearchResults').innerHTML = '<div class="empty-state">Search for workouts to add</div>';
+        document.getElementById('createRoutineModal').classList.add('active');
+    }
+
+    function closeCreateRoutineModal() {
+        document.getElementById('createRoutineModal').classList.remove('active');
+    }
+
+    document.getElementById('createSearchInput').addEventListener('keyup', async function() {
+        const search = this.value.trim();
+        if (!search) {
+            document.getElementById('createSearchResults').innerHTML = '<div class="empty-state">Search for workouts to add</div>';
             return;
         }
-        list.innerHTML = workouts.map(w => {
-            const isAdded = addedWorkouts.some(a => a.id === w.id);
-            return `
-                <div class="available-workout-item">
-                    <span class="available-workout-name">${w.name}</span>
-                    <button class="btn-workout-add ${isAdded ? 'added' : ''}" 
-                        onclick="toggleWorkout(${w.id}, '${w.name.replace(/'/g, "\\'")}', this)">
-                        ${isAdded ? '✓ Added' : 'Add'}
-                    </button>
+
+        try {
+            const response = await fetch(`/api/routines/workouts-search?search=${encodeURIComponent(search)}`);
+            const workouts = await response.json();
+
+            let html = '';
+            workouts.forEach(workout => {
+                const isAdded = currentRoutineState.addedWorkouts.some(w => w.id === workout.id);
+                html += `
+                    <div class="workout-item">
+                        <span class="workout-item-name">${workout.name}</span>
+                        <div class="workout-item-actions">
+                            <button class="btn-small" onclick="openWorkoutDetailModal(${workout.id}, 'create')">View</button>
+                            ${isAdded ? `
+                                <button class="btn-small" onclick="removeFromCreateList(${workout.id})">Remove</button>
+                            ` : `
+                                <button class="btn-small btn-small-add" onclick="addToCreateList(${workout.id}, '${workout.name.replace(/'/g, "\\'")}')">Add</button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('createSearchResults').innerHTML = html || '<div class="empty-state">No workouts found</div>';
+        } catch (error) {
+            console.error('Error searching workouts:', error);
+            showToast('Error searching workouts', true);
+        }
+    });
+
+    function addToCreateList(workoutId, workoutName) {
+        currentRoutineState.addedWorkouts.push({ id: workoutId, name: workoutName });
+        updateCreateAddedList();
+        document.getElementById('createSearchInput').dispatchEvent(new Event('keyup'));
+    }
+
+    function removeFromCreateList(workoutId) {
+        currentRoutineState.addedWorkouts = currentRoutineState.addedWorkouts.filter(w => w.id !== workoutId);
+        updateCreateAddedList();
+        document.getElementById('createSearchInput').dispatchEvent(new Event('keyup'));
+    }
+
+    function updateCreateAddedList() {
+        const container = document.getElementById('createAddedWorkoutsList');
+        if (currentRoutineState.addedWorkouts.length === 0) {
+            container.innerHTML = '<div class="empty-state">No workouts added yet</div>';
+            return;
+        }
+        let html = '';
+        currentRoutineState.addedWorkouts.forEach(workout => {
+            html += `
+                <div class="workout-item">
+                    <span class="workout-item-name">${workout.name}</span>
+                    <button class="btn-small btn-small-danger" onclick="removeFromCreateList(${workout.id})">✕ Delete</button>
                 </div>
             `;
-        }).join('');
+        });
+        container.innerHTML = html;
     }
 
-    function toggleWorkout(id, name, btn) {
-        const index = addedWorkouts.findIndex(w => w.id === id);
-        if (index === -1) {
-            addedWorkouts.push({ id, name });
-            btn.textContent = '✓ Added';
-            btn.classList.add('added');
-        } else {
-            addedWorkouts.splice(index, 1);
-            btn.textContent = 'Add';
-            btn.classList.remove('added');
-        }
-        renderAddedWorkouts();
-    }
-
-    function renderAddedWorkouts() {
-        const list = document.getElementById('addedWorkoutsList');
-        const empty = document.getElementById('emptyState');
-        if (addedWorkouts.length === 0) {
-            list.innerHTML = '<div class="empty-state" id="emptyState">No workouts added yet</div>';
+    async function saveNewRoutine() {
+        const name = document.getElementById('createRoutineName').value.trim();
+        if (!name) {
+            showToast('Please enter a routine name', true);
             return;
         }
-        list.innerHTML = addedWorkouts.map(w => `
-            <div class="added-workout-item">
-                <span class="added-workout-name">${w.name}</span>
-                <button class="btn-remove" onclick="removeWorkout(${w.id})">✕</button>
-            </div>
-        `).join('');
-    }
-
-    function removeWorkout(id) {
-        addedWorkouts = addedWorkouts.filter(w => w.id !== id);
-        renderAddedWorkouts();
-        renderAvailableWorkouts(getFilteredWorkouts());
-    }
-
-    function getFilteredWorkouts() {
-        const query = document.getElementById('modalSearchWorkout').value.toLowerCase();
-        return allWorkouts.filter(w => w.name.toLowerCase().includes(query));
-    }
-
-    function filterWorkouts() {
-        renderAvailableWorkouts(getFilteredWorkouts());
-    }
-
-    async function saveRoutine() {
-        const name = document.getElementById('modalRoutineName').value.trim();
-        if (!name) { alert('Please enter a routine name.'); return; }
-        if (addedWorkouts.length === 0) { alert('Please add at least one workout.'); return; }
 
         try {
             // Create the routine
             const routineRes = await fetch('/api/routines', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: name, description: '', user_id: 0 })
+                body: JSON.stringify({
+                    name: name,
+                    description: document.getElementById('createRoutineDesc').value.trim()
+                })
             });
 
-            if (!routineRes.ok) { alert('Failed to create routine.'); return; }
+            if (!routineRes.ok) throw new Error('Failed to create routine');
             const routine = await routineRes.json();
 
-            // Add each workout to the routine
-            for (const workout of addedWorkouts) {
+            // Add workouts to the routine
+            for (const workout of currentRoutineState.addedWorkouts) {
                 await fetch(`/api/routines/${routine.id}/workouts`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ workout_id: workout.id, sets: 3, reps: 10 })
+                    body: JSON.stringify({ workout_id: workout.id })
                 });
             }
 
-            alert('Routine created successfully!');
-            closeCreateModal();
-            location.reload();
+            showToast('Routine created successfully!');
+            closeCreateRoutineModal();
+            setTimeout(() => location.reload(), 1500);
         } catch (error) {
-            alert('Error creating routine.');
+            console.error('Error creating routine:', error);
+            showToast('Error creating routine: ' + error.message, true);
         }
     }
 
-    function openCreateModal() {
-        addedWorkouts = [];
-        document.getElementById('modalRoutineName').value = '';
-        document.getElementById('modalSearchWorkout').value = '';
-        document.getElementById('addedWorkoutsList').innerHTML = '<div class="empty-state">No workouts added yet</div>';
-        document.getElementById('createRoutineModal').classList.add('active');
-        loadWorkouts();
+    // ========== EDIT ROUTINE ==========
+    async function openEditRoutineModal(routineId) {
+        currentRoutineState.id = routineId;
+        currentRoutineState.editingWorkouts = [];
+
+        try {
+            const response = await fetch(`/api/routines/${routineId}/details`);
+            if (!response.ok) throw new Error('Failed to load routine');
+            const routine = await response.json();
+
+            document.getElementById('editRoutineNumber').textContent = routineId;
+            currentRoutineState.editingWorkouts = routine.workouts || [];
+            updateEditCurrentList();
+            document.getElementById('editSearchInput').value = '';
+            document.getElementById('editSearchResults').innerHTML = '<div class="empty-state">Search for workouts to add</div>';
+            document.getElementById('editRoutineModal').classList.add('active');
+        } catch (error) {
+            console.error('Error loading routine:', error);
+            showToast('Error loading routine', true);
+        }
     }
 
-    function closeCreateModal() {
-        document.getElementById('createRoutineModal').classList.remove('active');
+    function closeEditRoutineModal() {
+        document.getElementById('editRoutineModal').classList.remove('active');
     }
 
-    // Delete routine
-    document.querySelectorAll('.btn-delete[data-routine-id]').forEach(button => {
-        button.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete this routine?')) {
-                fetch(`/api/routines/${this.dataset.routineId}`, { method: 'DELETE' })
-                    .then(res => {
-                        if (res.ok) { location.reload(); }
-                        else { alert('Failed to delete routine.'); }
-                    });
-            }
+    function updateEditCurrentList() {
+        const container = document.getElementById('editCurrentWorkoutsList');
+        if (currentRoutineState.editingWorkouts.length === 0) {
+            container.innerHTML = '<div class="empty-state">No workouts in routine</div>';
+            return;
+        }
+        let html = '';
+        currentRoutineState.editingWorkouts.forEach(rw => {
+            html += `
+                <div class="workout-item">
+                    <span class="workout-item-name">${rw.workout.name}</span>
+                    <div class="workout-item-actions">
+                        <button class="btn-small btn-small-danger" onclick="removeFromEditList(${rw.id})">Delete</button>
+                    </div>
+                </div>
+            `;
         });
-    });
+        container.innerHTML = html;
+    }
+
+    async function searchWorkoutsForEdit() {
+        const search = document.getElementById('editSearchInput').value.trim();
+        if (!search) {
+            document.getElementById('editSearchResults').innerHTML = '<div class="empty-state">Search for workouts to add</div>';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/routines/workouts-search?search=${encodeURIComponent(search)}`);
+            const workouts = await response.json();
+
+            let html = '';
+            workouts.forEach(workout => {
+                const isInRoutine = currentRoutineState.editingWorkouts.some(w => w.workout.id === workout.id);
+                html += `
+                    <div class="workout-item">
+                        <span class="workout-item-name">${workout.name}</span>
+                        <div class="workout-item-actions">
+                            <button class="btn-small" onclick="openWorkoutDetailModal(${workout.id}, 'edit')">View</button>
+                            ${isInRoutine ? `
+                                <button class="btn-small" disabled>Added</button>
+                            ` : `
+                                <button class="btn-small btn-small-add" onclick="addToEditRoutine(${workout.id}, '${workout.name.replace(/'/g, "\\'")}')">Add</button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('editSearchResults').innerHTML = html || '<div class="empty-state">No workouts found</div>';
+        } catch (error) {
+            console.error('Error searching workouts:', error);
+            showToast('Error searching workouts', true);
+        }
+    }
+
+    async function addToEditRoutine(workoutId, workoutName) {
+        try {
+            const response = await fetch(`/api/routines/${currentRoutineState.id}/workouts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ workout_id: workoutId })
+            });
+
+            if (!response.ok) throw new Error('Failed to add workout');
+
+            // Reload the routine details
+            const detailRes = await fetch(`/api/routines/${currentRoutineState.id}/details`);
+            const routine = await detailRes.json();
+            currentRoutineState.editingWorkouts = routine.workouts || [];
+            updateEditCurrentList();
+            document.getElementById('editSearchInput').dispatchEvent(new Event('keyup'));
+            showToast('Workout added to routine!');
+        } catch (error) {
+            console.error('Error adding workout:', error);
+            showToast('Error adding workout', true);
+        }
+    }
+
+    function openWorkoutDetailForEdit(workoutId, workoutName, routineWorkoutId) {
+        // This function is not needed anymore - DELETE and ADD workflow is simpler
+    }
+
+    async function removeFromEditList(routineWorkoutId) {
+        try {
+            const response = await fetch(`/api/routines/${currentRoutineState.id}/workouts/${routineWorkoutId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) throw new Error('Failed to remove workout');
+
+            // Reload the routine details
+            const detailRes = await fetch(`/api/routines/${currentRoutineState.id}/details`);
+            const routine = await detailRes.json();
+            currentRoutineState.editingWorkouts = routine.workouts || [];
+            updateEditCurrentList();
+            document.getElementById('editSearchInput').dispatchEvent(new Event('keyup'));
+            showToast('Workout removed from routine!');
+        } catch (error) {
+            console.error('Error removing workout:', error);
+            showToast('Error removing workout', true);
+        }
+    }
+
+    async function saveEditRoutine() {
+        try {
+            // The changes are saved as we make them via the API, so just close the modal
+            showToast('Routine updated successfully!');
+            closeEditRoutineModal();
+            setTimeout(() => location.reload(), 1500);
+        } catch (error) {
+            console.error('Error saving routine:', error);
+            showToast('Error saving routine', true);
+        }
+    }
+
+    // ========== WORKOUT DETAIL ==========
+    let currentWorkoutDetail = null;
+
+    async function openWorkoutDetailModal(workoutId, sourceModal = 'create') {
+        try {
+            const response = await fetch(`/api/routines/workouts-search`);
+            const workouts = await response.json();
+            const workout = workouts.find(w => w.id === workoutId);
+
+            if (!workout) throw new Error('Workout not found');
+
+            currentWorkoutDetail = { id: workoutId, sourceModal };
+
+            document.getElementById('detailWorkoutImage').src = workout.image_url || '';
+            document.getElementById('detailWorkoutImage').onerror = function() { this.style.display = 'none'; };
+            document.getElementById('detailWorkoutTitle').textContent = workout.name;
+            document.getElementById('detailWorkoutMuscle').textContent = '💪 ' + (workout.muscle_group || 'Full Body');
+            document.getElementById('detailWorkoutDesc').textContent = workout.description;
+            document.getElementById('detailWorkoutCategory').textContent = workout.category;
+            document.getElementById('detailWorkoutDifficulty').textContent = workout.difficulty;
+
+            // Show/hide add button based on context
+            const addBtn = document.getElementById('addWorkoutBtn');
+            if (sourceModal === 'create') {
+                addBtn.style.display = 'block';
+                addBtn.textContent = 'Add to Routine';
+            } else if (sourceModal === 'edit') {
+                addBtn.style.display = 'block';
+                addBtn.textContent = 'Add to Routine';
+            } else {
+                addBtn.style.display = 'none';
+            }
+
+            document.getElementById('workoutDetailModal').classList.add('active');
+        } catch (error) {
+            console.error('Error loading workout details:', error);
+            showToast('Error loading workout details', true);
+        }
+    }
+
+    function closeWorkoutDetailModal() {
+        document.getElementById('workoutDetailModal').classList.remove('active');
+        currentWorkoutDetail = null;
+    }
+
+    function addWorkoutFromDetail() {
+        if (!currentWorkoutDetail) return;
+
+        if (currentWorkoutDetail.sourceModal === 'create') {
+            // Get the workout name for display
+            const workoutName = document.getElementById('detailWorkoutTitle').textContent;
+            addToCreateList(currentWorkoutDetail.id, workoutName);
+            closeWorkoutDetailModal();
+            showToast('Workout added to routine!');
+        } else if (currentWorkoutDetail.sourceModal === 'edit') {
+            addToEditRoutineFromDetail(currentWorkoutDetail.id, document.getElementById('detailWorkoutTitle').textContent);
+        }
+    }
+
+    async function addToEditRoutineFromDetail(workoutId, workoutName) {
+        try {
+            const response = await fetch(`/api/routines/${currentRoutineState.id}/workouts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ workout_id: workoutId })
+            });
+
+            if (!response.ok) throw new Error('Failed to add workout');
+
+            // Reload the routine details
+            const detailRes = await fetch(`/api/routines/${currentRoutineState.id}/details`);
+            const routine = await detailRes.json();
+            currentRoutineState.editingWorkouts = routine.workouts || [];
+            updateEditCurrentList();
+            document.getElementById('editSearchInput').dispatchEvent(new Event('keyup'));
+            closeWorkoutDetailModal();
+            showToast('Workout added to routine!');
+        } catch (error) {
+            console.error('Error adding workout:', error);
+            showToast('Error adding workout', true);
+        }
+    }
+
+    // ========== DELETE ROUTINE ==========
+    async function deleteRoutine(routineId) {
+        if (!confirm('Are you sure you want to delete this routine?')) return;
+
+        try {
+            const response = await fetch(`/api/routines/${routineId}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Failed to delete routine');
+            showToast('Routine deleted successfully!');
+            setTimeout(() => location.reload(), 1500);
+        } catch (error) {
+            console.error('Error deleting routine:', error);
+            showToast('Error deleting routine', true);
+        }
+    }
 </script>
 {% endblock %}
-
-
-

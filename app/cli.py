@@ -12,6 +12,29 @@ cli = typer.Typer()
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
+async def seed_default_users():
+    """Seed default users (bob/bobpass) to database."""
+    from app.models.user import User
+    from app.utilities.security import encrypt_password
+    
+    with Session(engine) as db:
+        # Check if bob user already exists
+        existing_bob = db.exec(select(User).where(User.username == "bob")).one_or_none()
+        if existing_bob:
+            typer.echo("User 'bob' already exists, skipping...")
+            return
+        
+        # Create bob user
+        bob = User(
+            username="bob",
+            email="bob@example.com",
+            password=encrypt_password("bobpass"),
+            role="user"
+        )
+        db.add(bob)
+        db.commit()
+        typer.secho(f"Successfully created user 'bob' with password 'bobpass'", fg=typer.colors.GREEN)
+
 async def fetch_and_seed():
     typer.echo("Fetching workouts and images from wger API...")
     # 1. We need TWO different URLs
@@ -75,6 +98,7 @@ def initialize():
     """Create tables and seed initial workout data."""
     typer.echo("Initializing Database...")
     create_db_and_tables()
+    asyncio.run(seed_default_users())
     asyncio.run(fetch_and_seed())
 
 @cli.command()

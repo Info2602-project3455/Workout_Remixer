@@ -311,6 +311,143 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(164, 198, 40, 0.4);
     }
+
+    /* Swap Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .swap-modal-box {
+        background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
+        border: 1px solid #333;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .swap-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem;
+        border-bottom: 1px solid #333;
+    }
+
+    .swap-modal-header h3 {
+        color: #fff;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .swap-modal-close {
+        background: transparent;
+        border: none;
+        color: #aaa;
+        font-size: 1.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .swap-modal-close:hover {
+        color: #fff;
+        transform: rotate(90deg);
+    }
+
+    .swap-modal-content {
+        padding: 2rem;
+        flex-grow: 1;
+    }
+
+    .swap-search-field {
+        background: rgba(42, 42, 42, 0.8);
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 12px 16px;
+        color: #fff;
+        font-size: 0.95rem;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .swap-search-field::placeholder {
+        color: #666;
+    }
+
+    .swap-search-field:focus {
+        outline: none;
+        border-color: var(--lime);
+        box-shadow: 0 0 12px rgba(164, 198, 40, 0.2);
+    }
+
+    .swap-results-list {
+        background: rgba(30, 30, 30, 0.8);
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 1rem;
+        max-height: 350px;
+        overflow-y: auto;
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .swap-workout-item {
+        background: rgba(42, 42, 42, 0.6);
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .swap-workout-item:hover {
+        border-color: var(--lime);
+        background: rgba(42, 42, 42, 0.8);
+    }
+
+    .swap-workout-name {
+        color: #fff;
+        font-weight: 600;
+        flex: 1;
+    }
+
+    .btn-select-swap {
+        background: linear-gradient(135deg, var(--lime), #91B623);
+        border: none;
+        color: #000;
+        padding: 6px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+    }
+
+    .btn-select-swap:hover {
+        transform: translateY(-2px);
+    }
     
     .navbar-header {
         display: flex;
@@ -328,6 +465,12 @@
         color: var(--lime);
         margin: 0;
         margin-bottom: 0.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .page-title:hover {
+        transform: translateX(4px);
     }
     
     .page-subtitle {
@@ -348,7 +491,7 @@
             </div>
             <div class="navbar-header">
                 <div class="navbar-title-group">
-                    <h1 class="page-title">Workout Remixer</h1>
+                    <h1 class="page-title" id="pageTitle" data-href="{{ url_for('index_view') }}">Workout Remixer</h1>
                     <p class="page-subtitle">Build, customize, and remix your perfect workout routine</p>
                 </div>
                 <div class="nav-group">
@@ -366,45 +509,53 @@
 
         <!-- Two Column Layout -->
         <div class="edit-container">
-            <!-- Left Column: Currently Editing -->
-            <div>
-                <h2 class="section-title">Currently Editing: {{ routine.name }}</h2>
-                <div class="current-routine-list" id="currentRoutineList">
-                    {% if routine.workouts %}
-                        {% for rw in routine.workouts %}
-                        <div class="routine-exercise-item" data-workout-id="{{ rw.workout.id }}" data-routine-workout-id="{{ rw.id }}">
-                            <span class="exercise-name">{{ rw.workout.name }}</span>
-                            <div class="exercise-buttons">
-                                <button class="btn-swap" onclick="markForSwap('{{ rw.id }}', '{{ rw.workout.name }}' )">Swap</button>
-                                <button class="btn-delete" onclick="markForDelete('{{ rw.id }}')">Delete</button>
+            <!-- Left Column: Routine Settings -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Routine Name -->
+                <div>
+                    <label style="color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Routine Name</label>
+                    <input type="text" id="routineName" value="{{ routine.name }}" placeholder="Enter routine name..." style="width: 100%; padding: 12px; background: rgba(42, 42, 42, 0.8); border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 0.95rem;">
+                </div>
+
+                <!-- Added Workouts Card -->
+                <div style="background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%); border: 1px solid #333; border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; flex: 1; min-height: 300px;">
+                    <h3 style="color: #fff; margin: 0 0 0.5rem 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Added Workouts</h3>
+                    <div id="addedWorkoutsList" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem;">
+                        {% if routine.workouts %}
+                            {% for rw in routine.workouts %}
+                            <div class="routine-exercise-item" data-workout-id="{{ rw.workout.id }}" data-routine-workout-id="{{ rw.id }}" style="background: rgba(42, 42, 42, 0.6); border-left: 3px solid var(--lime); border-radius: 6px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                                <span class="exercise-name" style="color: #fff; font-weight: 600; flex: 1;">{{ rw.workout.name }}</span>
+                                <div class="exercise-buttons" style="display: flex; gap: 0.5rem;">
+                                    <button class="btn-view-mini" data-workout-id="{{ rw.workout.id }}" data-workout-name="{{ rw.workout.name }}" style="background: linear-gradient(135deg, var(--orange), var(--red)); border: none; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">View</button>
+                                    <button class="btn-delete" data-routine-workout-id="{{ rw.id }}" style="background: rgba(214, 54, 26, 0.2); border: 1px solid var(--red); color: var(--red); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">Delete</button>
+                                </div>
                             </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <p style="color: #aaa; text-align: center; padding: 2rem;">No workouts in this routine yet. Add some from the search panel.</p>
-                    {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <p style="color: #666; text-align: center; padding: 2rem; margin: 0;">No workouts yet. Add from the right panel.</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
-            <!-- Right Column: Search & Results -->
-            <div class="search-section">
+            <!-- Right Column: Search & Browse Workouts -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Search Input -->
                 <div>
-                    <h2 class="section-title">Search Workouts</h2>
-                    <input type="text" class="search-field" placeholder="Search workouts..." id="searchWorkouts" onkeyup="filterWorkouts()">
+                    <label style="color: #aaa; font-size: 0.85rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Search Workouts</label>
+                    <input type="text" id="searchWorkouts" placeholder="Search workouts..." style="width: 100%; padding: 12px; background: rgba(42, 42, 42, 0.8); border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 0.95rem;">
                 </div>
 
-                <div>
-                    <p class="filter-label">Filter</p>
-                </div>
-
-                <div>
-                    <div class="search-results" id="searchResults">
+                <!-- Workouts Card -->
+                <div style="background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%); border: 1px solid #333; border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; flex: 1; min-height: 300px;">
+                    <h3 style="color: #fff; margin: 0 0 0.5rem 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Browse Workouts</h3>
+                    <div id="searchResults" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem;">
                         {% for workout in workouts %}
-                        <div class="workout-card" data-workout-id="{{ workout.id }}" data-name="{{ workout.name.lower() }}" data-category="{{ workout.category.lower() }}">
-                            <div class="workout-card-title">{{ workout.name }}</div>
-                            <div class="workout-card-buttons">
-                                <button class="btn-view" onclick="viewWorkout('{{ workout.id }}', '{{ workout.name }}')">View</button>
-                                <button class="btn-action" data-action="add" onclick="addWorkout('{{ workout.id }}', '{{ workout.name }}')">Add</button>
+                        <div class="workout-card" data-workout-id="{{ workout.id }}" data-name="{{ workout.name|lower }}" data-category="{{ (workout.category or '')|lower }}" style="background: rgba(42, 42, 42, 0.6); border: 1px solid #333; border-radius: 6px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                            <span class="workout-card-title" style="color: #fff; font-weight: 600; flex: 1; font-size: 0.9rem;">{{ workout.name }}</span>
+                            <div class="workout-card-buttons" style="display: flex; gap: 0.5rem;">
+                                <button class="btn-view" data-workout-id="{{ workout.id }}" data-workout-name="{{ workout.name }}" data-workout-desc="{{ workout.description }}" data-workout-muscle="{{ workout.category }}" style="background: linear-gradient(135deg, var(--orange), var(--red)); border: none; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">View</button>
+                                <button class="btn-action" data-action="add" data-workout-id="{{ workout.id }}" data-workout-name="{{ workout.name }}" style="background: linear-gradient(135deg, var(--lime), #91B623); border: none; color: #000; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">Add</button>
                             </div>
                         </div>
                         {% endfor %}
@@ -414,9 +565,9 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="history.back()">Cancel</button>
-            <button class="btn-save" onclick="saveChanges()">Save Changes</button>
+        <div class="modal-actions" style="margin-top: 2rem;">
+            <button class="btn-cancel" id="btnCancel">Cancel</button>
+            <button class="btn-save" id="btnSave">Save Changes</button>
         </div>
     </div>
 </div>
@@ -425,12 +576,104 @@
 
 <script>
     const routine_id = '{{ routine.id }}';
-    let pendingChanges = {
-        toAdd: [],
-        toDelete: [],
-        toSwap: null
-    };
-    let swapTarget = null;
+    let allWorkouts = [];
+    let addedWorkoutIds = new Set();
+    let pendingAdditions = new Set();
+    let pendingDeletions = new Set();
+    let currentViewingWorkout = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Load all workouts for search
+        await loadAllWorkouts();
+        
+        // Initialize added workouts
+        const addedItems = document.querySelectorAll('.routine-exercise-item');
+        addedItems.forEach(item => {
+            const workoutId = parseInt(item.getAttribute('data-workout-id'));
+            addedWorkoutIds.add(workoutId);
+        });
+
+        // Page title navigation
+        const pageTitle = document.getElementById('pageTitle');
+        if (pageTitle) {
+            pageTitle.style.cursor = 'pointer';
+            pageTitle.addEventListener('click', function() {
+                window.location.href = this.getAttribute('data-href');
+            });
+        }
+
+        // Setup event listeners
+        setupEventListeners();
+
+        // Search functionality
+        document.getElementById('searchWorkouts').addEventListener('keyup', filterWorkouts);
+
+        // Button listeners
+        document.getElementById('btnCancel').addEventListener('click', function() {
+            if (pendingAdditions.size > 0 || pendingDeletions.size > 0) {
+                if (confirm('You have unsaved changes. Are you sure you want to discard them?')) {
+                    history.back();
+                }
+            } else {
+                history.back();
+            }
+        });
+
+        document.getElementById('btnSave').addEventListener('click', saveChanges);
+    });
+
+    async function loadAllWorkouts() {
+        try {
+            const response = await fetch('/api/workouts');
+            allWorkouts = await response.json();
+            console.log('Loaded workouts:', allWorkouts);
+        } catch (error) {
+            console.error('Failed to load workouts:', error);
+        }
+    }
+
+    function setupEventListeners() {
+        // Delete buttons
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const routineWorkoutId = this.getAttribute('data-routine-workout-id');
+                deleteWorkout(routineWorkoutId);
+            });
+        });
+
+        // View buttons in added list
+        document.querySelectorAll('.btn-view-mini').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const workoutId = this.getAttribute('data-workout-id');
+                const workoutName = this.getAttribute('data-workout-name');
+                openViewModal(workoutId, workoutName);
+            });
+        });
+
+        // View and Add buttons in search results
+        document.querySelectorAll('.btn-view').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const workoutId = this.getAttribute('data-workout-id');
+                const workoutName = this.getAttribute('data-workout-name');
+                const desc = this.getAttribute('data-workout-desc');
+                const muscle = this.getAttribute('data-workout-muscle');
+                openViewModal(workoutId, workoutName, desc, muscle);
+            });
+        });
+
+        document.querySelectorAll('.btn-action[data-action="add"]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const workoutId = parseInt(this.getAttribute('data-workout-id'));
+                const workoutName = this.getAttribute('data-workout-name');
+                addWorkout(workoutId, workoutName);
+            });
+        });
+    }
 
     function filterWorkouts() {
         const searchInput = document.getElementById('searchWorkouts').value.toLowerCase();
@@ -448,82 +691,182 @@
         });
     }
 
-    function markForDelete(routineWorkoutId) {
-        if (!pendingChanges.toDelete.includes(routineWorkoutId)) {
-            pendingChanges.toDelete.push(routineWorkoutId);
-        }
+    function openViewModal(workoutId, workoutName, description = '', muscleGroup = '') {
+        currentViewingWorkout = workoutId;
         
-        const element = document.querySelector(`[data-routine-workout-id="${routineWorkoutId}"]`);
-        element.style.opacity = '0.5';
-        element.style.textDecoration = 'line-through';
+        // Find full workout info if not provided
+        const workout = allWorkouts.find(w => w.id === parseInt(workoutId));
+        if (workout) {
+            description = workout.description || description;
+            muscleGroup = workout.category || muscleGroup;
+        }
+
+        document.getElementById('viewModalTitle').textContent = workoutName;
+        document.getElementById('viewModalDescription').textContent = description || 'No description available';
+        document.getElementById('viewModalMuscle').textContent = muscleGroup || 'General';
+
+        // Set image
+        const img = document.getElementById('viewModalImage');
+        const placeholder = document.getElementById('viewModalPlaceholder');
+        if (workout && workout.image_url && workout.image_url.trim()) {
+            img.src = workout.image_url;
+            img.style.display = 'block';
+            placeholder.style.display = 'none';
+            img.onerror = function() {
+                img.style.display = 'none';
+                placeholder.style.display = 'block';
+            };
+        } else {
+            img.style.display = 'none';
+            placeholder.style.display = 'block';
+        }
+
+        document.getElementById('viewModal').classList.add('active');
     }
 
-    function markForSwap(routineWorkoutId, workoutName) {
-        swapTarget = { id: routineWorkoutId, name: workoutName };
-        alert(`Selected "${workoutName}" to swap. Now click "Add" or "Swap" on another workout.`);
+    function closeViewModal() {
+        document.getElementById('viewModal').classList.remove('active');
+        currentViewingWorkout = null;
     }
 
     function addWorkout(workoutId, workoutName) {
-        if (swapTarget) {
-            // Swap operation
-            pendingChanges.toSwap = {
-                routineWorkoutId: swapTarget.id,
-                newWorkoutId: workoutId
-            };
-            alert(`Swapping "${swapTarget.name}" with "${workoutName}"`);
-            swapTarget = null;
-        } else {
-            // Add operation
-            if (!pendingChanges.toAdd.includes(workoutId)) {
-                pendingChanges.toAdd.push(workoutId);
-            }
-            
-            const workoutCard = document.querySelector(`[data-workout-id="${workoutId}"]`);
-            const btn = workoutCard.querySelector('.btn-action');
-            btn.textContent = 'Added';
-            btn.disabled = true;
-            btn.style.opacity = '0.5';
+        // Check if already added
+        if (addedWorkoutIds.has(workoutId) || pendingAdditions.has(workoutId)) {
+            alert('This workout is already in your routine');
+            return;
+        }
+
+        // Add to pending
+        pendingAdditions.add(workoutId);
+        addedWorkoutIds.add(workoutId);
+
+        // Update UI
+        const addedList = document.getElementById('addedWorkoutsList');
+        
+        // Remove empty state if present
+        const emptyState = addedList.querySelector('p');
+        if (emptyState) {
+            emptyState.remove();
+        }
+
+        // Add new item
+        const item = document.createElement('div');
+        item.className = 'routine-exercise-item';
+        item.setAttribute('data-workout-id', workoutId);
+        item.setAttribute('data-pending-add', 'true');
+        item.style.cssText = 'background: rgba(42, 42, 42, 0.6); border-left: 3px solid var(--lime); border-radius: 6px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;';
+        item.innerHTML = `
+            <span style="color: #fff; font-weight: 600; flex: 1; font-size: 0.9rem;">${workoutName}</span>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="btn-view-mini" data-workout-id="${workoutId}" data-workout-name="${workoutName}" style="background: linear-gradient(135deg, var(--orange), var(--red)); border: none; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">View</button>
+                <button class="btn-delete" style="background: rgba(214, 54, 26, 0.2); border: 1px solid var(--red); color: var(--red); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">Delete</button>
+            </div>
+        `;
+        addedList.appendChild(item);
+
+        // Add event listeners to new buttons
+        item.querySelector('.btn-view-mini').addEventListener('click', function(e) {
+            e.preventDefault();
+            const wId = this.getAttribute('data-workout-id');
+            const wName = this.getAttribute('data-workout-name');
+            openViewModal(wId, wName);
+        });
+
+        item.querySelector('.btn-delete').addEventListener('click', function(e) {
+            e.preventDefault();
+            deleteWorkout(workoutId, true);
+        });
+
+        // Update the source button
+        const sourceBtn = document.querySelector(`.btn-action[data-workout-id="${workoutId}"]`);
+        if (sourceBtn) {
+            sourceBtn.textContent = 'Added';
+            sourceBtn.disabled = true;
+            sourceBtn.style.opacity = '0.5';
+        }
+
+        // Close view modal if open
+        if (document.getElementById('viewModal').classList.contains('active')) {
+            closeViewModal();
         }
     }
 
-    function viewWorkout(workoutId, workoutName) {
-        alert(`Viewing details for ${workoutName}`);
-        // Could open a modal here with workout details
+    function deleteWorkout(dataId, isPending = false) {
+        if (isPending) {
+            // Handle pending addition deletion
+            const workoutId = parseInt(dataId);
+            pendingAdditions.delete(workoutId);
+            addedWorkoutIds.delete(workoutId);
+
+            // Remove from UI
+            const item = document.querySelector(`[data-workout-id="${workoutId}"][data-pending-add]`);
+            if (item) item.remove();
+
+            // Re-enable add button
+            const sourceBtn = document.querySelector(`.btn-action[data-workout-id="${workoutId}"]`);
+            if (sourceBtn) {
+                sourceBtn.textContent = 'Add';
+                sourceBtn.disabled = false;
+                sourceBtn.style.opacity = '1';
+            }
+
+            // Show empty state if needed
+            const addedList = document.getElementById('addedWorkoutsList');
+            if (addedList.children.length === 0 || !addedList.querySelector('div')) {
+                addedList.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem; margin: 0;">No workouts yet. Add from the right panel.</p>';
+            }
+        } else {
+            // Existing workout - mark for deletion
+            if (!pendingDeletions.has(dataId)) {
+                pendingDeletions.add(dataId);
+                const item = document.querySelector(`[data-routine-workout-id="${dataId}"]`);
+                if (item) {
+                    item.style.opacity = '0.5';
+                    item.style.textDecoration = 'line-through';
+                    const deleteBtn = item.querySelector('.btn-delete');
+                    if (deleteBtn) {
+                        deleteBtn.textContent = 'Undoing...';
+                        deleteBtn.disabled = true;
+                    }
+                }
+            }
+        }
     }
 
     async function saveChanges() {
+        const routineName = document.getElementById('routineName').value.trim();
+        
+        if (!routineName) {
+            alert('Please enter a routine name');
+            return;
+        }
+
         try {
-            // Delete workouts from routine
-            for (const routineWorkoutId of pendingChanges.toDelete) {
-                const response = await fetch(`/api/routines/${routine_id}/workouts/${routineWorkoutId}`, {
-                    method: 'DELETE'
-                });
-                if (!response.ok) throw new Error('Failed to delete workout');
+            // Update routine name
+            const updateRes = await fetch(`/api/routines/${routine_id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: routineName })
+            });
+
+            if (!updateRes.ok) {
+                const error = await updateRes.json();
+                throw new Error(error.detail || 'Failed to update routine');
             }
 
-            // Handle swap
-            if (pendingChanges.toSwap) {
-                const { routineWorkoutId, newWorkoutId } = pendingChanges.toSwap;
-                // First delete the old one
-                await fetch(`/api/routines/${routine_id}/workouts/${routineWorkoutId}`, {
+            // Delete marked workouts
+            for (const routineWorkoutId of pendingDeletions) {
+                const delRes = await fetch(`/api/routines/${routine_id}/workouts/${routineWorkoutId}`, {
                     method: 'DELETE'
                 });
-                // Then add the new one
-                const response = await fetch(`/api/routines/${routine_id}/workouts`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        workout_id: newWorkoutId,
-                        sets: 3,
-                        reps: 10
-                    })
-                });
-                if (!response.ok) throw new Error('Failed to add workout');
+                if (!delRes.ok) {
+                    throw new Error('Failed to delete workout');
+                }
             }
 
             // Add new workouts
-            for (const workoutId of pendingChanges.toAdd) {
-                const response = await fetch(`/api/routines/${routine_id}/workouts`, {
+            for (const workoutId of pendingAdditions) {
+                const addRes = await fetch(`/api/routines/${routine_id}/workouts`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -532,15 +875,57 @@
                         reps: 10
                     })
                 });
-                if (!response.ok) throw new Error('Failed to add workout');
+                if (!addRes.ok) {
+                    throw new Error('Failed to add workout');
+                }
             }
 
-            alert('Changes saved successfully!');
+            alert('Routine saved successfully!');
             window.location.href = '{{ url_for("routines_view") }}';
         } catch (error) {
             console.error('Error:', error);
-            alert('Failed to save changes: ' + error.message);
+            alert('Error saving changes: ' + error.message);
         }
     }
+
+    // Close view modal when clicking outside
+    document.getElementById('viewModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeViewModal();
+        }
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('viewModal').classList.contains('active')) {
+            closeViewModal();
+        }
+    });
 </script>
-{% endblock %}
+
+<!-- View Workout Modal -->
+<div class="modal-overlay" id="viewModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center;">
+    <div class="modal-box" style="background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%); border: 1px solid #333; border-radius: 16px; width: 90%; max-width: 600px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 2rem; border-bottom: 1px solid #333; gap: 1rem;">
+            <div style="flex: 1;">
+                <h2 id="viewModalTitle" style="font-size: 1.5rem; font-weight: 700; color: #fff; margin: 0;"></h2>
+            </div>
+            <button onclick="closeViewModal()" style="background: transparent; border: none; color: #aaa; font-size: 1.8rem; cursor: pointer; transition: all 0.3s ease; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">✕</button>
+        </div>
+        <div style="padding: 2rem; flex-grow: 1; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                <img id="viewModalImage" src="" alt="" style="display: none; width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px;">
+                <div id="viewModalPlaceholder" style="font-size: 5rem; text-align: center;">🏋️‍♂️</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div>
+                    <span id="viewModalMuscle" style="display: inline-block; background: linear-gradient(135deg, var(--orange), var(--red)); color: #fff; padding: 8px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: 600;"></span>
+                </div>
+                <p id="viewModalDescription" style="color: #bbb; line-height: 1.6; margin: 0; font-size: 0.95rem;"></p>
+            </div>
+        </div>
+        <div style="padding: 1.5rem; border-top: 1px solid #333; text-align: right;">
+            <button onclick="closeViewModal()" style="background: rgba(42, 42, 42, 0.8); border: 1px solid #444; color: #aaa; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">Close</button>
+        </div>
+    </div>
+</div>

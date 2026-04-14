@@ -2,167 +2,808 @@
 
 {% block title %}Browse Workouts{% endblock %}
 
+{% block internal_css %}
+<style>
+    :root {
+        --red: #D6361A;
+        --orange: #EB8315;
+        --lime: #A4C628;
+        --dark-purple: #531B66;
+    }
+
+    body {
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar-custom {
+        background: rgba(20, 20, 20, 0.95);
+        border-bottom: 2px solid var(--lime);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+    }
+
+    .navbar-content {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .navbar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .navbar-title-group {
+        flex: 1;
+    }
+
+    .page-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--lime);
+        margin: 0;
+        margin-bottom: 0.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .page-title:hover {
+        transform: translateX(4px);
+    }
+
+    .page-subtitle {
+        color: #aaa;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+
+    .nav-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .nav-btn {
+        border-radius: 50px;
+        padding: 8px 20px;
+        border: none;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .nav-btn-inactive {
+        background: transparent;
+        color: #fff;
+        border: 2px solid #444;
+    }
+
+    .nav-btn-inactive:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+    }
+
+    .nav-btn-active {
+        background: var(--lime);
+        color: #000;
+    }
+
+    .nav-btn-logout {
+        background: var(--red);
+        color: #fff;
+    }
+
+    .nav-btn-logout:hover {
+        background: #c42a14;
+    }
+
+    .content-wrapper {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .content-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 2rem;
+    }
+
+    .workouts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .workout-card {
+        background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
+        border: 1px solid #333;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .workout-card:hover {
+        border-color: var(--lime);
+        box-shadow: 0 8px 24px rgba(164, 198, 40, 0.15);
+        transform: translateY(-4px);
+    }
+
+    .workout-image-container {
+        background: rgba(42, 42, 42, 0.8);
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-bottom: 1px solid #333;
+    }
+
+    .workout-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .workout-placeholder {
+        font-size: 3rem;
+    }
+
+    .workout-content {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .workout-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .workout-muscle {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--orange), var(--red));
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        width: fit-content;
+    }
+
+    .workout-description {
+        color: #bbb;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        margin: 0;
+        flex-grow: 1;
+    }
+
+    .workout-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #333;
+    }
+
+    .btn-view, .btn-add {
+        flex: 1;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-view {
+        background: transparent;
+        border: 1px solid #444;
+        color: #aaa;
+    }
+
+    .btn-view:hover {
+        border-color: var(--lime);
+        color: var(--lime);
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg, var(--orange), var(--red));
+        color: #fff;
+    }
+
+    .btn-add:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(235, 131, 21, 0.3);
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-box {
+        background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
+        border: 1px solid #333;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 2rem;
+        border-bottom: 1px solid #333;
+        gap: 1rem;
+    }
+
+    .modal-close {
+        background: transparent;
+        border: none;
+        color: #aaa;
+        font-size: 1.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .modal-close:hover {
+        color: #fff;
+        transform: rotate(90deg);
+    }
+
+    .modal-content {
+        padding: 2rem;
+        flex-grow: 1;
+    }
+
+    .modal-workout-image {
+        width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        background: rgba(42, 42, 42, 0.8);
+        padding: 1rem;
+    }
+
+    .modal-workout-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .modal-workout-muscle {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--orange), var(--red));
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .modal-workout-description {
+        color: #bbb;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .modal-footer {
+        padding: 2rem;
+        border-top: 1px solid #333;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-modal-close {
+        flex: 1;
+        background: rgba(42, 42, 42, 0.8);
+        border: 1px solid #444;
+        color: #aaa;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-modal-close:hover {
+        background: rgba(42, 42, 42, 1);
+        color: #fff;
+    }
+
+    .btn-modal-add {
+        flex: 1;
+        background: linear-gradient(135deg, var(--lime), #91B623);
+        border: none;
+        color: #000;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-modal-add:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(164, 198, 40, 0.4);
+    }
+
+    /* Pagination Styles */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .pagination-info {
+        color: #aaa;
+        font-size: 0.9rem;
+        margin-right: 1rem;
+    }
+
+    .pagination-btn {
+        background: rgba(42, 42, 42, 0.8);
+        border: 1px solid #444;
+        color: #aaa;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .pagination-btn:hover {
+        border-color: var(--lime);
+        color: var(--lime);
+        background: rgba(42, 42, 42, 1);
+    }
+
+    .pagination-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .pagination-btn.disabled:hover {
+        border-color: #444;
+        color: #aaa;
+        background: rgba(42, 42, 42, 0.8);
+    }
+
+    .pagination-btn.active {
+        background: linear-gradient(135deg, var(--lime), #91B623);
+        border-color: var(--lime);
+        color: #000;
+    }
+
+    .page-numbers {
+        display: flex;
+        gap: 0.3rem;
+    }
+
+    .page-number {
+        background: rgba(42, 42, 42, 0.8);
+        border: 1px solid #444;
+        color: #aaa;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .page-number:hover {
+        border-color: var(--lime);
+        color: var(--lime);
+    }
+
+    .page-number.active {
+        background: linear-gradient(135deg, var(--lime), #91B623);
+        border-color: var(--lime);
+        color: #000;
+    }
+</style>
+{% endblock %}
+
 {% block subpage_content %}
-<div class="container-fluid py-4">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <div>
-            <h1 class="fw-bold mb-2">Browse Workouts</h1>
-            <p class="text-muted">Search and discover workouts</p>
-        </div>
-        <a href="{{ url_for('user_home_view') }}" class="btn btn-secondary btn-lg">My Routines</a>
-    </div>
-
-    <!-- Search Section -->
-    <div class="card mb-4 shadow-sm border-0">
-        <div class="card-body">
-            <div class="input-group input-group-lg">
-                <input type="text" class="form-control" placeholder="Search workouts..." id="searchInput">
-                <button class="btn btn-outline-secondary">Filter</button>
+<div style="background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); min-height: 100vh;">
+    <!-- Navbar -->
+    <div class="navbar-custom">
+        <div class="navbar-content">
+            <div class="navbar-header">
+                <div class="navbar-title-group">
+                    <h1 class="page-title" id="pageTitle" data-href="{{ url_for('index_view') }}">Workout Remixer</h1>
+                    <p class="page-subtitle">Browse and discover workouts</p>
+                </div>
+                <div class="nav-group">
+                    <button class="nav-btn nav-btn-active" disabled>Browse Workouts</button>
+                    <a href="{{ url_for('routines_view') }}" class="nav-btn nav-btn-inactive">View Routines</a>
+                    <a href="{{ url_for('logout') }}" class="nav-btn nav-btn-logout">Logout</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Workouts Grid -->
-<div class="row g-4" id="workoutsGrid">
-    {% for workout in workouts %}
-    <div class="col-md-6 col-lg-4 workout-card">
-        <div class="card h-100 shadow-sm border-0">
-            <div class="card-header bg-light text-center py-3">
-                <h5 class="mb-0">{{ workout.name }}</h5>
-            </div>
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <h2 class="content-title">Browse Workouts</h2>
 
-            <div class="px-3 pt-3 text-center">
-                {% if workout.image_url %}
-                    <img src="{{ workout.image_url }}" class="card-img-top p-3" alt="{{ workout.name }}" style="max-height: 200px; object-fit: contain;">
-                {% else %}
-                    <div style="font-size: 4rem; margin: 1rem 0;">🏋️‍♂️</div>
+        <!-- Workouts Grid -->
+        <div class="workouts-grid" id="workoutsGrid">
+            {% for workout in workouts %}
+            <div class="workout-card">
+                <div class="workout-image-container">
+                    {% if workout.image_url %}
+                        <img src="{{ workout.image_url }}" alt="{{ workout.name }}" class="workout-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <div style="display: none; font-size: 3rem;">🏋️‍♂️</div>
+                    {% else %}
+                        <div class="workout-placeholder">🏋️‍♂️</div>
+                    {% endif %}
+                </div>
+                <div class="workout-content">
+                    <h3 class="workout-name">{{ workout.name }}</h3>
+                    <span class="workout-muscle">{{ workout.muscle_group }}</span>
+                    <p class="workout-description">{{ workout.description | striptags | truncate(120) }}</p>
+                </div>
+                <div class="workout-actions">
+                    <button class="btn-view" data-workout-id="{{ workout.id }}" data-workout-name="{{ workout.name }}" data-workout-desc="{{ workout.description }}" data-workout-muscle="{{ workout.muscle_group }}" data-workout-image="{{ workout.image_url or '' }}">View</button>
+                    <button class="btn-add" data-workout-id="{{ workout.id }}" data-workout-name="{{ workout.name }}">Add</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if total_pages > 1 %}
+        <div class="pagination-container">
+            <span class="pagination-info">Page {{ current_page }} of {{ total_pages }} ({{ total_count }} total)</span>
+            
+            <a href="{% if current_page > 1 %}{{ url_for('browse_view', page=1) }}{% else %}#{% endif %}" class="pagination-btn {% if current_page == 1 %}disabled{% endif %}">« First</a>
+            
+            <a href="{% if current_page > 1 %}{{ url_for('browse_view', page=current_page - 1) }}{% else %}#{% endif %}" class="pagination-btn {% if current_page <= 1 %}disabled{% endif %}">‹ Previous</a>
+
+            <div class="page-numbers">
+                {% set start_page = [1, current_page - 2] | max %}
+                {% set end_page = [total_pages, current_page + 2] | min %}
+                
+                {% if start_page > 1 %}
+                    <a href="{{ url_for('browse_view', page=1) }}" class="page-number">1</a>
+                    {% if start_page > 2 %}
+                        <span style="color: #666; padding: 8px 4px;">...</span>
+                    {% endif %}
+                {% endif %}
+
+                {% for page_num in range(start_page, end_page + 1) %}
+                    <a href="{{ url_for('browse_view', page=page_num) }}" class="page-number {% if page_num == current_page %}active{% endif %}">{{ page_num }}</a>
+                {% endfor %}
+
+                {% if end_page < total_pages %}
+                    {% if end_page < total_pages - 1 %}
+                        <span style="color: #666; padding: 8px 4px;">...</span>
+                    {% endif %}
+                    <a href="{{ url_for('browse_view', page=total_pages) }}" class="page-number">{{ total_pages }}</a>
                 {% endif %}
             </div>
 
-            <div class="card-body">
-                <p class="badge bg-secondary">{{ workout.muscle_group }}</p>
-                <p class="card-text text-muted mt-2">{{ workout.description | striptags | truncate(100) }}</p>
+            <a href="{% if current_page < total_pages %}{{ url_for('browse_view', page=current_page + 1) }}{% else %}#{% endif %}" class="pagination-btn {% if current_page >= total_pages %}disabled{% endif %}">Next ›</a>
+            
+            <a href="{% if current_page < total_pages %}{{ url_for('browse_view', page=total_pages) }}{% else %}#{% endif %}" class="pagination-btn {% if current_page == total_pages %}disabled{% endif %}">Last »</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- View Workout Modal -->
+<div class="modal-overlay" id="workoutModal">
+    <div class="modal-box" style="max-width: 600px;">
+        <div class="modal-header">
+            <div style="flex: 1;">
+                <h2 class="modal-workout-title" id="modalTitle"></h2>
             </div>
-            <div class="card-footer bg-light d-grid gap-2">
-                <button class="btn btn-primary btn-sm">Add to Routine</button>
+            <button class="modal-close" id="modalCloseBtn">✕</button>
+        </div>
+        <div class="modal-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <!-- Left Column: Image -->
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                <img id="modalImage" src="" alt="" class="modal-workout-image" style="display: none; width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px;">
+                <div style="display: none; font-size: 5rem; text-align: center;" id="modalPlaceholder">🏋️‍♂️</div>
+                <button class="btn-modal-add" id="modalAddBtn" style="width: 100%;">Add to Routine</button>
+                <button style="width: 100%; padding: 12px 24px; background: rgba(42,42,42,0.8); border: 1px solid #444; color: #aaa; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="closeWorkoutModal()">Back</button>
+            </div>
+
+            <!-- Right Column: Description -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div>
+                    <span class="modal-workout-muscle" id="modalMuscle" style="display: inline-block; background: linear-gradient(135deg, var(--orange), var(--red)); color: #fff; padding: 8px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: 600;"></span>
+                </div>
+                <div>
+                    <p class="modal-workout-description" id="modalDescription" style="color: #bbb; line-height: 1.6; margin: 0;"></p>
+                </div>
             </div>
         </div>
     </div>
-    {% endfor %}
 </div>
 
 <script>
-document.getElementById('searchInput').addEventListener('keyup', function() {
-    const query = this.value.toLowerCase();
-    document.querySelectorAll('.workout-card').forEach(card => {
-        const name = card.querySelector('h5').textContent.toLowerCase();
-        card.style.display = name.includes(query) ? 'block' : 'none';
-    });
-});
+    let userRoutines = [];
+    let selectedRoutineId = null;
+    let currentWorkoutInModal = null;
 
-async function addToRoutine(workoutId) {
-    try {
-        const response = await fetch(`/api/routines/${routine_id}/add`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ workout_id: workoutId })
-        });
-        if (response.ok) {
-            alert('Workout added to routine!');
-        } else {
-            alert('Failed to add workout.');
+    async function loadUserRoutines() {
+        try {
+            const response = await fetch('/api/routines');
+            userRoutines = await response.json();
+        } catch (error) {
+            console.error('Failed to load routines:', error);
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while adding the workout.');
     }
-}
 
+    function openWorkoutModal(workoutId, name, description, muscleGroup, imageUrl) {
+        currentWorkoutInModal = workoutId;
+        selectedRoutineId = null;
 
+        document.getElementById('modalTitle').textContent = name;
+        document.getElementById('modalDescription').textContent = description;
+        document.getElementById('modalMuscle').textContent = muscleGroup;
+        
+        const modalImage = document.getElementById('modalImage');
+        const modalPlaceholder = document.getElementById('modalPlaceholder');
+        
+        if (imageUrl && imageUrl.trim()) {
+            modalImage.src = imageUrl;
+            modalImage.style.display = 'block';
+            modalPlaceholder.style.display = 'none';
+            modalImage.onerror = function() {
+                modalImage.style.display = 'none';
+                modalPlaceholder.style.display = 'block';
+            };
+        } else {
+            modalImage.style.display = 'none';
+            modalPlaceholder.style.display = 'block';
+        }
 
+        // Reset button state
+        const addBtn = document.getElementById('modalAddBtn');
+        addBtn.textContent = userRoutines.length === 0 ? 'No Routines' : userRoutines.length === 1 ? 'Add to Routine' : 'Select Routine...';
+        addBtn.style.background = userRoutines.length === 0 ? 'rgba(100,100,100,0.5)' : 'linear-gradient(135deg, var(--lime), #91B623)';
+        addBtn.style.color = userRoutines.length === 0 ? '#888' : '#000';
+        addBtn.disabled = userRoutines.length === 0;
 
+        document.getElementById('workoutModal').classList.add('active');
+    }
+
+    function closeWorkoutModal() {
+        document.getElementById('workoutModal').classList.remove('active');
+        currentWorkoutInModal = null;
+        selectedRoutineId = null;
+    }
+
+    async function addFromModal() {
+        if (!currentWorkoutInModal) return;
+
+        // If only one routine, add directly
+        if (userRoutines.length === 1) {
+            selectedRoutineId = userRoutines[0].id;
+            await performAddToRoutine();
+            return;
+        }
+
+        // If multiple routines, show selection
+        if (userRoutines.length > 1) {
+            showRoutineSelectionDialog();
+            return;
+        }
+    }
+
+    function showRoutineSelectionDialog() {
+        const routineList = userRoutines.map(r => `
+            <div style="
+                padding: 0.75rem;
+                margin-bottom: 0.5rem;
+                background: rgba(42, 42, 42, 0.8);
+                border: 1px solid #333;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            " onclick="selectRoutineAndAdd(${r.id}, event)">
+                <div style="color: #fff; font-weight: 600; margin-bottom: 0.25rem;">${r.name}</div>
+                <div style="color: #999; font-size: 0.8rem;">${r.workouts ? r.workouts.length : 0} workouts</div>
+            </div>
+        `).join('');
+
+        const dialogStyle = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 10001;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+        `;
+
+        // Check if dialog already exists
+        let dialog = document.getElementById('routineSelectDialog');
+        if (!dialog) {
+            dialog = document.createElement('div');
+            dialog.id = 'routineSelectDialog';
+            dialog.style.cssText = dialogStyle;
+            document.body.appendChild(dialog);
+        }
+
+        dialog.innerHTML = `
+            <h3 style="color: #fff; margin: 0 0 1rem 0; font-size: 1.25rem;">Select Routine</h3>
+            <div>${routineList}</div>
+            <button onclick="closeRoutineSelectDialog()" style="
+                width: 100%;
+                margin-top: 1rem;
+                padding: 0.75rem;
+                background: rgba(100, 100, 100, 0.5);
+                border: 1px solid #444;
+                color: #aaa;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 600;
+            ">Cancel</button>
+        `;
+
+        // Add overlay
+        let overlay = document.getElementById('routineSelectOverlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'routineSelectOverlay';
+            overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10000;';
+            overlay.onclick = closeRoutineSelectDialog;
+            document.body.appendChild(overlay);
+        }
+    }
+
+    async function selectRoutineAndAdd(routineId, e) {
+        e.stopPropagation();
+        selectedRoutineId = routineId;
+        closeRoutineSelectDialog();
+        await performAddToRoutine();
+    }
+
+    function closeRoutineSelectDialog() {
+        const dialog = document.getElementById('routineSelectDialog');
+        const overlay = document.getElementById('routineSelectOverlay');
+        if (dialog) dialog.remove();
+        if (overlay) overlay.remove();
+    }
+
+    async function performAddToRoutine() {
+        if (!selectedRoutineId || !currentWorkoutInModal) {
+            alert('Please select a routine');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/routines/${selectedRoutineId}/workouts`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ workout_id: currentWorkoutInModal, sets: 3, reps: 10 })
+            });
+
+            if (response.ok) {
+                alert('Workout added to routine successfully!');
+                closeWorkoutModal();
+            } else {
+                const error = await response.json();
+                alert('Error: ' + (error.detail || 'Failed to add workout'));
+            }
+        } catch (error) {
+            alert('Error adding workout: ' + error.message);
+        }
+    }
+
+    // Setup event listeners for view buttons
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Load user routines on page load
+        await loadUserRoutines();
+
+        // Page title navigation
+        const pageTitle = document.getElementById('pageTitle');
+        if (pageTitle) {
+            pageTitle.style.cursor = 'pointer';
+            pageTitle.addEventListener('click', function() {
+                window.location.href = this.getAttribute('data-href');
+            });
+        }
+
+        document.querySelectorAll('.btn-view').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const workoutId = this.getAttribute('data-workout-id');
+                const name = this.getAttribute('data-workout-name');
+                const desc = this.getAttribute('data-workout-desc');
+                const muscle = this.getAttribute('data-workout-muscle');
+                const image = this.getAttribute('data-workout-image');
+                openWorkoutModal(workoutId, name, desc, muscle, image);
+            });
+        });
+
+        // Modal close buttons
+        document.getElementById('modalCloseBtn').addEventListener('click', closeWorkoutModal);
+        document.getElementById('modalAddBtn').addEventListener('click', addFromModal);
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('workoutModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeWorkoutModal();
+        }
+    });
+
+    // Keyboard support - close on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeWorkoutModal();
+        }
+    });
 </script>
-        <!-- Chest Workout Card
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-header bg-light text-center py-3">
-                    <h5 class="mb-0">CHEST WORKOUT</h5>
-                </div>
-                <div class="card-body text-center">
-                    <div style="font-size: 3rem; margin: 1rem 0;">💪</div>
-                    <p class="card-text text-muted">Workout description</p>
-                </div>
-                <div class="card-footer bg-light d-grid gap-2">
-                    <button class="btn btn-primary btn-sm">View</button>
-                </div>
-            </div>
-        </div>
-
-         LEG WORKOUT Card
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-header bg-light text-center py-3">
-                    <h5 class="mb-0">LEG WORKOUT</h5>
-                </div>
-                <div class="card-body text-center">
-                    <div style="font-size: 3rem; margin: 1rem 0;">🦵</div>
-                    <p class="card-text text-muted">Workout description</p>
-                </div>
-                <div class="card-footer bg-light d-grid gap-2">
-                    <button class="btn btn-primary btn-sm">View</button>
-                </div>
-            </div>
-        </div>
-
-         Back Workout Card
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-header bg-light text-center py-3">
-                    <h5 class="mb-0">BACK WORKOUT</h5>
-                </div>
-                <div class="card-body text-center">
-                    <div style="font-size: 3rem; margin: 1rem 0;">🔙</div>
-                    <p class="card-text text-muted">Workout description</p>
-                </div>
-                <div class="card-footer bg-light d-grid gap-2">
-                    <button class="btn btn-primary btn-sm">View</button>
-                </div>
-            </div>
-        </div>
-
-         Arm Workout Card
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-header bg-light text-center py-3">
-                    <h5 class="mb-0">ARM WORKOUT</h5>
-                </div>
-                <div class="card-body text-center">
-                    <div style="font-size: 3rem; margin: 1rem 0;">💯</div>
-                    <p class="card-text text-muted">Workout description</p>
-                </div>
-                <div class="card-footer bg-light d-grid gap-2">
-                    <button class="btn btn-primary btn-sm">View</button>
-                </div>
-            </div>
-        </div>
-
-        Custom Workout Card
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-header bg-light text-center py-3">
-                    <h5 class="mb-0">CUSTOM WORKOUT</h5>
-                </div>
-                <div class="card-body text-center">
-                    <div style="font-size: 3rem; margin: 1rem 0;">⚙️</div>
-                    <p class="card-text text-muted">Workout description</p>
-                </div>
-                <div class="card-footer bg-light d-grid gap-2">
-                    <button class="btn btn-primary btn-sm">View</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 {% endblock %}
