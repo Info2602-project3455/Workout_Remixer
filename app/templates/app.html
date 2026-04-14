@@ -334,13 +334,12 @@
             {% for workout in workouts %}
             <div class="workout-card" data-category="{{ workout.category | lower }}">
               <div class="workout-icon">
-                {% if workout.image_url %}
-                    <img src="{{ workout.image_url }}" alt="{{ workout.name }} image" class="workout-image">
-                {% else %}
-                    <div class="workout-image" style="display: flex; align-items: center; justify-content: center; color: #555; font-size: 2rem;">
-                        🏋️
-                    </div>
-                {% endif %}
+<img 
+    src="{{ workout.image_url or url_for('static', path='img/workout-placeholder.png') }}"
+    alt="{{ workout.name }} image"
+    class="workout-image"
+    onerror="this.onerror=null; this.src='{{ url_for('static', path='img/workout-placeholder.png') }}';"
+>
               </div>
                 <span class="category-badge">{{ workout.category }}</span>
                 <h3 class="workout-name">{{ workout.name }}</h3>

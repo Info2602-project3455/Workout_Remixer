@@ -45,9 +45,15 @@ async def fetch_workouts_from_api():
 
         images = item.get("images", [])
         raw_image_url = None
-        if images and isinstance(images[0], dict):
-            raw_image_url = images[0].get("image")
 
+        if images:
+         for img in images:
+           if isinstance(img, dict):
+              url = img.get("image")
+              if url:
+                raw_image_url = url
+                break
+              
         muscles = item.get("muscles", [])
         if muscles and isinstance(muscles[0], dict):
             muscle_group = muscles[0].get("name_en") or muscles[0].get("name") or "Unknown"
