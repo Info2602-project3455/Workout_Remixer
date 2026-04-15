@@ -127,6 +127,13 @@ async def delete_routine(routine_id: int, db: SessionDep, user: AuthDep):
     if not routine or routine.user_id != user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
+    routine_workouts = db.exec(
+        select(RoutineWorkout).where(RoutineWorkout.routine_id == routine_id)
+    ).all()
+
+    for routine_workout in routine_workouts:
+        db.delete(routine_workout)
+
     db.delete(routine)
     db.commit()
     return {"message": "Routine deleted"}
