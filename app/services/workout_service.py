@@ -1,84 +1,45 @@
 import httpx
 
-WGER_API_URL = "https://wger.de/api/v2/exerciseinfo/?limit=12"
-WGER_BASE_URL = "https://wger.de"
-
-
-def build_absolute_url(url: str | None) -> str | None:
-    if not url:
-        return None
-    if url.startswith("http://") or url.startswith("https://"):
-        return url
-    return f"{WGER_BASE_URL}{url}"
-
-
-def pick_translation(item: dict) -> dict:
-    translations = item.get("translations", [])
-    if not translations:
-        return {}
-
-    # Prefer English if present
-    for translation in translations:
-        if str(translation.get("language")) == "2":
-            return translation
-
-    # Otherwise use the first available translation
-    return translations[0]
-
+API_URL = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json"
+IMAGE_BASE = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/"
 
 async def fetch_workouts_from_api():
     async with httpx.AsyncClient(timeout=20.0) as client:
-        response = await client.get(WGER_API_URL)
+        response = await client.get(API_URL)
         response.raise_for_status()
         data = response.json()
 
     workouts = []
 
-    for item in data.get("results", []):
-        translation = pick_translation(item)
+    for item in data:
+        name = item.get("name")
+        if not name:
+            continue
 
-        category = item.get("category", {})
-        if isinstance(category, dict):
-            category_name = category.get("name", "Unknown")
-        else:
-            category_name = "Unknown"
+        # Combine instructions into one description
+        instructions = item.get("instructions", [])
+        description = " ".join(instructions) if instructions else "No description available"
 
+        category = item.get("category", "General")
+        difficulty = item.get("level", "Unknown")
+
+        muscles = item.get("primaryMuscles", [])
+        muscle_group = muscles[0] if muscles else "Full Body"
+
+        # Build image URL
         images = item.get("images", [])
-        raw_image_url = None
-
         if images:
-         for img in images:
-           if isinstance(img, dict):
-              url = img.get("image")
-              if url:
-                raw_image_url = url
-                break
-              
-        muscles = item.get("muscles", [])
-        if muscles and isinstance(muscles[0], dict):
-            muscle_group = muscles[0].get("name_en") or muscles[0].get("name") or "Unknown"
+            image_url = IMAGE_BASE + images[0]
         else:
-            muscle_group = "Unknown"
-
-        workout_name = (
-            translation.get("name")
-            or item.get("name")
-            or "Unnamed Workout"
-        )
-
-        workout_description = (
-            translation.get("description")
-            or item.get("description")
-            or "No description available"
-        )
+            image_url = None
 
         workouts.append({
-            "name": workout_name,
-            "description": workout_description,
-            "category": category_name,
-            "difficulty": "Unknown",
+            "name": name,
+            "description": description,
+            "category": category,
+            "difficulty": difficulty,
             "muscle_group": muscle_group,
-            "image_url": build_absolute_url(raw_image_url),
+            "image_url": image_url,
         })
 
     return workouts

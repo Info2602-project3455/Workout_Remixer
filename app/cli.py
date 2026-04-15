@@ -36,63 +36,56 @@ async def seed_default_users():
         typer.secho(f"Successfully created user 'bob' with password 'bobpass'", fg=typer.colors.GREEN)
 
 async def fetch_and_seed():
-    typer.echo("Fetching workouts and images from wger API...")
-    # 1. We need TWO different URLs
-    INFO_URL = "https://wger.de/api/v2/exerciseinfo/?format=json&language=2&limit=500"
-    IMAGE_URL = "https://wger.de/api/v2/exerciseimage/?format=json&limit=500"
-    
-    async with httpx.AsyncClient() as client:
-        # 2. Fetch both at the same time
-        info_resp, img_resp = await asyncio.gather(
-            client.get(INFO_URL),
-            client.get(IMAGE_URL)
-        )
-        
-        # 3. Get the 'results' list from both
-        exercises = info_resp.json().get("results", [])
-        images = img_resp.json().get("results", [])
+    typer.echo("Fetching workouts from new API...")
 
-    # 4. Create a map where key is the Exercise ID and value is the Image URL
-    # In the image API, 'exercise_base' is the ID that matches the exercise's 'id'
-    image_map = {img["exercise_base"]: img["image"] for img in images if "exercise_base" in img}
+    API_URL = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json"
+    IMAGE_BASE = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/"
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(API_URL)
+        exercises = response.json()
 
     with Session(engine) as db:
         count = 0
-        for item in exercises:
-            if not item.get("translations"): continue
-            
-            # Get English name/description
-            name, description = None, None
-            for t in item["translations"]:
-                if t["language"] == 2:
-                    name = t["name"]
-                    description = t["description"] or "No description"
-                    break
-            
-            if not name: continue
 
-            # 5. CRITICAL: Match the image using the exercise's ID
-            # This looks into our map to find the real .png/.jpg link
-            image_link = image_map.get(item["id"])
-            
-            # If no image is found in the map, use the placeholder
-            if not image_link:
-                image_link = "https://wger.de/static/images/icons/image-placeholder.svg"
+        for item in exercises:
+            name = item.get("name")
+            if not name:
+                continue
+
+            # Combine instructions into one string
+            instructions = item.get("instructions", [])
+            description = " ".join(instructions) if instructions else "No description"
+
+            # Map fields safely
+            category = item.get("category", "General")
+            difficulty = item.get("level", "Unknown")
+
+            muscles = item.get("primaryMuscles", [])
+            muscle_group = muscles[0] if muscles else "Full Body"
+
+            # Build image URL
+            images = item.get("images", [])
+            if images:
+                image_url = IMAGE_BASE + images[0]
+            else:
+                image_url = None
 
             workout = Workout(
                 name=name,
                 description=description,
-                category=item["category"]["name"] if item.get("category") else "General",
-                difficulty="Intermediate",
-                muscle_group=item["muscles"][0]["name_en"] if item.get("muscles") else "Full Body",
-                image_url=image_link  # This now contains the real link!
+                category=category,
+                difficulty=difficulty,
+                muscle_group=muscle_group,
+                image_url=image_url
             )
+
             db.add(workout)
             count += 1
-        
+
         db.commit()
         typer.secho(f"Successfully added {count} workouts", fg=typer.colors.GREEN)
-
+        
 @cli.command()
 def initialize():
     """Create tables and seed initial workout data."""
