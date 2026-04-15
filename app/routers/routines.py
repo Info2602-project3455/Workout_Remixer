@@ -45,13 +45,13 @@ async def edit_routine_view(routine_id: int, request: Request, user: AuthDep, db
         .where(Routine.id == routine_id)
         .where(Routine.user_id == user.id)
     ).first()
-    
+
     if not routine:
         raise HTTPException(status_code=404, detail="Routine not found")
-    
+
     # Get all workouts for search/display
     all_workouts = db.exec(select(Workout)).all()
-    
+
     return templates.TemplateResponse(
         request=request,
         name="routines.html",
@@ -87,6 +87,18 @@ async def create_routine(routine_data: CreateRoutineRequest, db: SessionDep, use
     return routine
 
 
+@api_router.get("/workouts-search")
+async def search_workouts(
+    db: SessionDep,
+    search: str = Query(None)
+):
+    query = select(Workout)
+    if search:
+        query = query.where(Workout.name.ilike(f"%{search}%"))
+    workouts = db.exec(query).all()
+    return workouts
+
+
 @api_router.get("/{routine_id}")
 async def get_routine(routine_id: int, db: SessionDep, user: AuthDep):
     routine = db.get(Routine, routine_id)
@@ -100,7 +112,7 @@ async def update_routine(routine_id: int, routine_data: UpdateRoutineRequest, db
     routine = db.get(Routine, routine_id)
     if not routine or routine.user_id != user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
-    
+
     routine.name = routine_data.name
     routine.description = routine_data.description
     db.add(routine)
@@ -114,23 +126,23 @@ async def delete_routine(routine_id: int, db: SessionDep, user: AuthDep):
     routine = db.get(Routine, routine_id)
     if not routine or routine.user_id != user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
-    
+
     db.delete(routine)
     db.commit()
     return {"message": "Routine deleted"}
 
+
 @api_router.post("/{routine_id}/workouts")
-async def add_workout_to_routine(    
-    routine_id:int,
+async def add_workout_to_routine(
+    routine_id: int,
     workout_data: AddWorkoutRequest,
     db: SessionDep,
     user: AuthDep
 ):
-    
     routine = db.get(Routine, routine_id)
     if not routine or routine.user_id != user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
-    
+
     link = RoutineWorkout(
         routine_id=routine_id,
         workout_id=workout_data.workout_id,
@@ -140,6 +152,7 @@ async def add_workout_to_routine(
     db.add(link)
     db.commit()
     return {"message": "Workout added to routine"}
+
 
 @api_router.delete("/{routine_id}/workouts/{routine_workout_id}")
 async def remove_workout_from_routine(
@@ -151,14 +164,15 @@ async def remove_workout_from_routine(
     routine = db.get(Routine, routine_id)
     if not routine or routine.user_id != user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
-    
+
     routine_workout = db.get(RoutineWorkout, routine_workout_id)
     if not routine_workout or routine_workout.routine_id != routine_id:
         raise HTTPException(status_code=404, detail="Workout not found in routine")
-    
+
     db.delete(routine_workout)
     db.commit()
     return {"message": "Workout removed from routine"}
+
 
 @api_router.put("/{routine_id}/workouts/{routine_workout_id}")
 async def swap_workout_in_routine(
@@ -171,29 +185,17 @@ async def swap_workout_in_routine(
     routine = db.get(Routine, routine_id)
     if not routine or routine.user_id != user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
-    
+
     routine_workout = db.get(RoutineWorkout, routine_workout_id)
     if not routine_workout or routine_workout.routine_id != routine_id:
         raise HTTPException(status_code=404, detail="Workout not found in routine")
-    
+
     routine_workout.workout_id = workout_data.workout_id
     routine_workout.sets = workout_data.sets
     routine_workout.reps = workout_data.reps
     db.add(routine_workout)
     db.commit()
     return {"message": "Workout swapped in routine"}
-
-
-@api_router.get("/workouts-search")
-async def search_workouts(
-    db: SessionDep,
-    search: str = Query(None)
-):
-    query = select(Workout)
-    if search:
-        query = query.where(Workout.name.ilike(f"%{search}%"))
-    workouts = db.exec(query).all()
-    return workouts
 
 
 @api_router.get("/{routine_id}/details")
@@ -203,10 +205,10 @@ async def get_routine_details(routine_id: int, db: SessionDep, user: AuthDep):
         .where(Routine.id == routine_id)
         .where(Routine.user_id == user.id)
     ).first()
-    
+
     if not routine:
         raise HTTPException(status_code=404, detail="Routine not found")
-    
+
     return {
         "id": routine.id,
         "name": routine.name,
@@ -222,7 +224,7 @@ async def get_routine_details(routine_id: int, db: SessionDep, user: AuthDep):
                     "category": rw.workout.category,
                     "difficulty": rw.workout.difficulty,
                     "muscle_group": rw.workout.muscle_group,
-                    "image_url": rw.workout.image_url
+                    "image_url": getattr(rw.workout, "image_url", None)
                 },
                 "sets": rw.sets,
                 "reps": rw.reps
