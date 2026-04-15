@@ -10,8 +10,18 @@ from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    from app.database import create_db_and_tables
+    from app.database import create_db_and_tables, engine
+    from app.models import Workout
+    from sqlmodel import Session, select
     create_db_and_tables()
+    # Seed workouts if database is empty
+    with Session(engine) as db:
+        existing = db.exec(select(Workout)).first()
+        if not existing:
+            import asyncio
+            from app.cli import fetch_and_seed, seed_default_users
+            await seed_default_users()
+            await fetch_and_seed()
     yield
 
 
