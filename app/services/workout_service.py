@@ -3,6 +3,7 @@ import httpx
 API_URL = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json"
 IMAGE_BASE = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/"
 
+
 async def fetch_workouts_from_api():
     async with httpx.AsyncClient(timeout=20.0) as client:
         response = await client.get(API_URL)
@@ -16,7 +17,6 @@ async def fetch_workouts_from_api():
         if not name:
             continue
 
-        # Combine instructions into one description
         instructions = item.get("instructions", [])
         description = " ".join(instructions) if instructions else "No description available"
 
@@ -26,7 +26,6 @@ async def fetch_workouts_from_api():
         muscles = item.get("primaryMuscles", [])
         muscle_group = muscles[0] if muscles else "Full Body"
 
-        # Build image URL
         images = item.get("images", [])
         if images:
             image_url = IMAGE_BASE + images[0]
@@ -34,6 +33,7 @@ async def fetch_workouts_from_api():
             image_url = None
 
         workouts.append({
+            "id": item.get("id"),   # important fix
             "name": name,
             "description": description,
             "category": category,

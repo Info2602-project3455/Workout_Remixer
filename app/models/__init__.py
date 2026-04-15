@@ -10,6 +10,7 @@ class Workout(SQLModel, table=True):
     category: str
     difficulty: str
     muscle_group: str
+    image_url: Optional[str] = None
     routine_links: List["RoutineWorkout"] = Relationship(back_populates="workout")
 
 class Routine(SQLModel, table=True):
