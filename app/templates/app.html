@@ -38,11 +38,6 @@
         margin-bottom: 1rem;
     }
     
-    .welcome-message {
-        color: #fff;
-        font-weight: 600;
-    }
-    
     .navbar-title-group {
         flex: 1;
     }
@@ -76,6 +71,7 @@
         transition: all 0.3s ease;
         cursor: pointer;
         white-space: nowrap;
+        text-decoration: none;
     }
     
     .nav-btn-active {
@@ -278,12 +274,270 @@
         margin-bottom: 12px;
         background-color: #2a2a2a;
     }
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.82);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(6px);
+        padding: 1rem;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-box {
+        width: 100%;
+        max-width: 780px;
+        background: linear-gradient(135deg, #1b1b1b 0%, #252525 100%);
+        border: 1px solid #333;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.4rem 1.6rem;
+        border-bottom: 1px solid #333;
+    }
+
+    .modal-title {
+        margin: 0;
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .modal-close {
+        background: transparent;
+        border: none;
+        color: #aaa;
+        font-size: 2rem;
+        line-height: 1;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .modal-close:hover {
+        color: #fff;
+        transform: rotate(90deg);
+    }
+
+    .modal-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        padding: 1.6rem;
+    }
+
+    .modal-image {
+        width: 100%;
+        max-height: 320px;
+        object-fit: cover;
+        border-radius: 12px;
+        background: #2a2a2a;
+        border: 1px solid #333;
+    }
+
+    .modal-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+    }
+
+    .modal-badge {
+        display: inline-block;
+        width: fit-content;
+        background: rgba(164, 198, 40, 0.15);
+        color: var(--lime);
+        border-radius: 999px;
+        padding: 5px 12px;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .modal-meta {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .modal-meta-pill {
+        background: #2a2a2a;
+        border: 1px solid #3b3b3b;
+        color: #ddd;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.86rem;
+    }
+
+    .modal-description {
+        color: #c7c7c7;
+        line-height: 1.65;
+        font-size: 0.96rem;
+        margin: 0;
+        max-height: 220px;
+        overflow-y: auto;
+        padding-right: 0.25rem;
+    }
+
+    .modal-footer {
+        padding: 1.2rem 1.6rem 1.6rem;
+        border-top: 1px solid #333;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .btn-modal-close {
+        background: linear-gradient(135deg, var(--lime), #91B623);
+        color: #000;
+        border: none;
+        border-radius: 10px;
+        padding: 0.85rem 1.25rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .btn-modal-close:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(164, 198, 40, 0.25);
+    }
+
+    .routine-select-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .routine-select-item {
+        background: #2a2a2a;
+        border: 1px solid #3b3b3b;
+        color: #fff;
+        border-radius: 10px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: 0.2s ease;
+        text-align: left;
+        width: 100%;
+    }
+
+    .routine-select-item:hover {
+        border-color: var(--lime);
+        transform: translateY(-1px);
+    }
+
+    .routine-select-name {
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .routine-select-meta {
+        color: #aaa;
+        font-size: 0.88rem;
+    }
+
+    .toast-message {
+        position: fixed;
+        right: 1.25rem;
+        bottom: 1.25rem;
+        background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+        color: #fff;
+        border: 1px solid #333;
+        border-left: 5px solid var(--lime);
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        min-width: 260px;
+        max-width: 360px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        z-index: 10001;
+        opacity: 0;
+        transform: translateY(20px);
+        pointer-events: none;
+        transition: all 0.25s ease;
+    }
+
+    .toast-message.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .toast-message.error {
+        border-left-color: var(--red);
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .pagination-info {
+        color: #aaa;
+        font-size: 0.9rem;
+        margin-right: 1rem;
+    }
+
+    .pagination-btn,
+    .page-number {
+        background: rgba(42, 42, 42, 0.8);
+        border: 1px solid #444;
+        color: #aaa;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .pagination-btn:hover,
+    .page-number:hover {
+        border-color: var(--lime);
+        color: var(--lime);
+    }
+
+    .pagination-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .page-number.active {
+        background: linear-gradient(135deg, var(--lime), #91B623);
+        border-color: var(--lime);
+        color: #000;
+    }
+
+    .page-numbers {
+        display: flex;
+        gap: 0.3rem;
+    }
+
+    @media (max-width: 768px) {
+        .modal-content {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block subpage_content %}
 <div style="background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); min-height: 100vh;">
-    <!-- Sticky Navigation Bar -->
     <div class="navbar-custom">
         <div class="navbar-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -295,7 +549,7 @@
                     <p class="page-subtitle">Build, customize, and remix your perfect workout routine</p>
                 </div>
                 <div class="nav-group">
-                    <button class="nav-btn nav-btn-active" onclick="scrollToWorkouts()">Browse Workouts</button>
+                    <a href="/app" class="nav-btn nav-btn-active">Browse Workouts</a>
                     <a href="{{ url_for('routines_view') }}" class="nav-btn nav-btn-inactive">View Routines</a>
                     <a href="{{ url_for('logout') }}" class="nav-btn nav-btn-logout">Logout</a>
                 </div>
@@ -303,44 +557,60 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="content-wrapper">
-
-        <!-- Search & Filter Section -->
-        <div class="search-filter-section">
+        <form method="get" action="/app" class="search-filter-section">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                 <div>
-                    <input type="text" class="search-input" placeholder="🔍 Search workouts (e.g., Chest, Squats)..." id="searchInput">
+                    <input
+                        type="text"
+                        class="search-input"
+                        placeholder="🔍 Search workouts (e.g., Chest, Squats)..."
+                        id="searchInput"
+                        name="search"
+                        value="{{ search or '' }}"
+                    >
                 </div>
                 <div>
-                    <select class="filter-select" id="filterSelect">
-                        <option value="">All Categories</option>
-                        <option value="arms">Arms</option>
-                        <option value="chest">Chest</option>
-                        <option value="back">Back</option>
-                        <option value="legs">Legs</option>
-                        <option value="cardio">Cardio</option>
-                        <option value="abs">Abs</option>
-                        <option value="shoulders">Shoulders</option>
-                        <option value="calves">Calves</option>
-                    </select>
+                    <select class="filter-select" id="filterSelect" name="category">
+    <option value="">All Categories</option>
+    <option value="arms" {% if selected_category == "arms" %}selected{% endif %}>Arms</option>
+    <option value="chest" {% if selected_category == "chest" %}selected{% endif %}>Chest</option>
+    <option value="back" {% if selected_category == "back" %}selected{% endif %}>Back</option>
+    <option value="legs" {% if selected_category == "legs" %}selected{% endif %}>Legs</option>
+    <option value="cardio" {% if selected_category == "cardio" %}selected{% endif %}>Cardio</option>
+    <option value="abs" {% if selected_category == "abs" %}selected{% endif %}>Abs</option>
+    <option value="shoulders" {% if selected_category == "shoulders" %}selected{% endif %}>Shoulders</option>
+    <option value="calves" {% if selected_category == "calves" %}selected{% endif %}>Calves</option>
+</select>
                 </div>
             </div>
-        </div>
+            <div style="margin-top: 16px; display: flex; gap: 12px;">
+                <button type="submit" class="btn-modal-close">Apply Filters</button>
+                <a href="/app" class="pagination-btn">Clear</a>
+            </div>
+        </form>
 
-        <!-- Workouts Grid -->
         {% if workouts %}
         <div class="workout-grid">
             {% for workout in workouts %}
-            <div class="workout-card" data-category="{{ workout.category | lower }}">
-              <div class="workout-icon">
-<img 
-    src="{{ workout.image_url or url_for('static', path='img/workout-placeholder.png') }}"
-    alt="{{ workout.name }} image"
-    class="workout-image"
-    onerror="this.onerror=null; this.src='{{ url_for('static', path='img/workout-placeholder.png') }}';"
->
-              </div>
+            <div 
+                 class="workout-card" 
+                 data-workout-id="{{ workout.id }}"
+                 data-category="{{ workout.category | lower }}"
+                 data-name="{{ workout.name }}"
+                 data-description="{{ workout.description | striptags }}"
+                 data-muscle="{{ workout.muscle_group }}"
+                 data-difficulty="{{ workout.difficulty }}"
+                 data-image="{{ workout.image_url or url_for('static', path='img/workout-placeholder.png') }}"
+            >
+                <div class="workout-icon">
+                    <img 
+                        src="{{ workout.image_url or url_for('static', path='img/workout-placeholder.png') }}"
+                        alt="{{ workout.name }} image"
+                        class="workout-image"
+                        onerror="this.onerror=null; this.src='{{ url_for('static', path='img/workout-placeholder.png') }}';"
+                    >
+                </div>
                 <span class="category-badge">{{ workout.category }}</span>
                 <h3 class="workout-name">{{ workout.name }}</h3>
                 <div class="workout-meta">
@@ -349,78 +619,294 @@
                 </div>
                 <p class="workout-description">{{ workout.description | striptags | truncate(100) }}</p>
                 <div class="workout-actions">
-                    <button class="btn-view">View</button>
-                    <button class="btn-add">Add to Routine</button>
+                    <button class="btn-view" type="button" data-workout-id="{{ workout.id }}">View</button>
+                    <button class="btn-add" type="button" data-workout-id="{{ workout.id }}">Add to Routine</button>
                 </div>
             </div>
             {% endfor %}
         </div>
+
+        {% if total_pages > 1 %}
+        <div class="pagination-container">
+            <span class="pagination-info">Page {{ current_page }} of {{ total_pages }} ({{ total_count }} total)</span>
+
+            <a href="/app?page=1&search={{ search | urlencode }}&category={{ selected_category | urlencode }}" class="pagination-btn {% if current_page == 1 %}disabled{% endif %}">« First</a>
+
+            <a href="/app?page={{ current_page - 1 }}&search={{ search | urlencode }}&category={{ selected_category | urlencode }}" class="pagination-btn {% if current_page == 1 %}disabled{% endif %}">‹ Previous</a>
+
+            <div class="page-numbers">
+                {% set start_page = [1, current_page - 2] | max %}
+                {% set end_page = [total_pages, current_page + 2] | min %}
+
+                {% for page_num in range(start_page, end_page + 1) %}
+                <a href="/app?page={{ page_num }}&search={{ search | urlencode }}&category={{ selected_category | urlencode }}" class="page-number {% if page_num == current_page %}active{% endif %}">{{ page_num }}</a>
+                {% endfor %}
+            </div>
+
+            <a href="/app?page={{ current_page + 1 }}&search={{ search | urlencode }}&category={{ selected_category | urlencode }}" class="pagination-btn {% if current_page == total_pages %}disabled{% endif %}">Next ›</a>
+
+            <a href="/app?page={{ total_pages }}&search={{ search | urlencode }}&category={{ selected_category | urlencode }}" class="pagination-btn {% if current_page == total_pages %}disabled{% endif %}">Last »</a>
+        </div>
+        {% endif %}
+
         {% else %}
         <div style="padding: 3rem; text-align: center; color: #ccc;">
-            No workouts found. Seed the database or add workouts to display cards here.
+            No workouts found for this search/filter.
         </div>
         {% endif %}
     </div>
 </div>
 
+<div class="modal-overlay" id="viewWorkoutModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalWorkoutTitle">Workout Details</h2>
+            <button class="modal-close" id="modalCloseBtn">×</button>
+        </div>
+
+        <div class="modal-content">
+            <div>
+                <img id="modalWorkoutImage" class="modal-image" src="" alt="Workout image">
+            </div>
+
+            <div class="modal-details">
+                <span class="modal-badge" id="modalWorkoutCategory"></span>
+
+                <div class="modal-meta">
+                    <span class="modal-meta-pill" id="modalWorkoutMuscle"></span>
+                    <span class="modal-meta-pill" id="modalWorkoutDifficulty"></span>
+                </div>
+
+                <p class="modal-description" id="modalWorkoutDescription"></p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-modal-close" id="modalFooterCloseBtn" type="button">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="routineSelectModal">
+    <div class="modal-box" style="max-width: 520px;">
+        <div class="modal-header">
+            <h2 class="modal-title">Select a Routine</h2>
+            <button class="modal-close" id="routineSelectCloseBtn">×</button>
+        </div>
+
+        <div style="padding: 1.6rem;">
+            <p style="color: #bbb; margin: 0 0 1rem 0;">Choose which routine to add this workout to.</p>
+            <div class="routine-select-list" id="routineSelectList"></div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-modal-close" id="routineSelectFooterCloseBtn" type="button">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-message" id="toastMessage"></div>
+
 <script>
-    function scrollToWorkouts() {
-        const workoutGrid = document.querySelector('.workout-grid');
-        if (workoutGrid) {
-            workoutGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    let userRoutines = [];
+
+    function openWorkoutModal(card) {
+        const name = card.getAttribute('data-name');
+        const category = card.getAttribute('data-category');
+        const description = card.getAttribute('data-description');
+        const muscle = card.getAttribute('data-muscle');
+        const difficulty = card.getAttribute('data-difficulty');
+        const image = card.getAttribute('data-image');
+
+        document.getElementById('modalWorkoutTitle').textContent = name;
+        document.getElementById('modalWorkoutCategory').textContent = category;
+        document.getElementById('modalWorkoutMuscle').textContent = muscle;
+        document.getElementById('modalWorkoutDifficulty').textContent = difficulty;
+        document.getElementById('modalWorkoutDescription').textContent = description;
+
+        const modalImage = document.getElementById('modalWorkoutImage');
+        modalImage.src = image;
+        modalImage.onerror = function() {
+            this.onerror = null;
+            this.src = "{{ url_for('static', path='img/workout-placeholder.png') }}";
+        };
+
+        document.getElementById('viewWorkoutModal').classList.add('active');
+    }
+
+    function closeWorkoutModal() {
+        document.getElementById('viewWorkoutModal').classList.remove('active');
+    }
+
+    function openRoutineSelectModal() {
+        document.getElementById('routineSelectModal').classList.add('active');
+    }
+
+    function closeRoutineSelectModal() {
+        document.getElementById('routineSelectModal').classList.remove('active');
+    }
+
+    function showToast(message, isError = false) {
+        const toast = document.getElementById('toastMessage');
+        toast.textContent = typeof message === 'string' ? message : 'Something went wrong';
+        toast.classList.remove('error', 'show');
+
+        if (isError) {
+            toast.classList.add('error');
+        }
+
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2800);
+    }
+
+    async function loadUserRoutines() {
+        try {
+            const response = await fetch('/api/routines');
+
+            if (!response.ok) {
+                throw new Error('Failed to load routines');
+            }
+
+            userRoutines = await response.json();
+        } catch (error) {
+            userRoutines = [];
         }
     }
 
-    function applyFilters() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const filterValue = document.getElementById('filterSelect').value.toLowerCase();
-        const cards = document.querySelectorAll('.workout-card');
+    async function addWorkoutToRoutine(routineId, workoutId, buttonElement = null) {
+        const parsedWorkoutId = Number(workoutId);
 
-        cards.forEach(card => {
-            const title = card.querySelector('.workout-name').textContent.toLowerCase();
-            const description = card.querySelector('.workout-description').textContent.toLowerCase();
-            const category = card.getAttribute('data-category');
+        if (!Number.isInteger(parsedWorkoutId) || parsedWorkoutId <= 0) {
+            showToast('Workout ID not found on this card.', true);
+            return;
+        }
 
-            const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
-            const matchesFilter = !filterValue || category === filterValue;
+        try {
+            const response = await fetch(`/api/routines/${routineId}/workouts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    workout_id: parsedWorkoutId,
+                    sets: 3,
+                    reps: 10
+                })
+            });
 
-            card.style.display = (matchesSearch && matchesFilter) ? '' : 'none';
-        });
+            if (!response.ok) {
+                let errorMessage = 'Failed to add workout to routine';
+
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.detail || errorMessage;
+                } catch (e) {
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            if (buttonElement) {
+                const originalText = buttonElement.dataset.originalText || 'Add to Routine';
+                buttonElement.textContent = '✓ Added!';
+                buttonElement.style.background = 'linear-gradient(135deg, var(--lime), #A4C628)';
+                buttonElement.style.color = '#000';
+
+                setTimeout(() => {
+                    buttonElement.textContent = originalText;
+                    buttonElement.style.background = 'linear-gradient(135deg, var(--orange), var(--red))';
+                    buttonElement.style.color = '#fff';
+                }, 1800);
+            }
+
+            showToast('Workout added to routine successfully!');
+            closeRoutineSelectModal();
+        } catch (error) {
+            showToast(error.message, true);
+        }
     }
 
-    document.getElementById('searchInput').addEventListener('keyup', applyFilters);
-    document.getElementById('filterSelect').addEventListener('change', applyFilters);
+    function renderRoutineOptions(workoutId, buttonElement) {
+        const container = document.getElementById('routineSelectList');
+        container.innerHTML = '';
+
+        userRoutines.forEach(routine => {
+            const item = document.createElement('button');
+            item.className = 'routine-select-item';
+            item.innerHTML = `
+                <div class="routine-select-name">${routine.name}</div>
+                <div class="routine-select-meta">${routine.description ? routine.description : 'No description'}</div>
+            `;
+
+            item.addEventListener('click', async function() {
+                await addWorkoutToRoutine(routine.id, workoutId, buttonElement);
+            });
+
+            container.appendChild(item);
+        });
+    }
 
     document.querySelectorAll('.btn-view').forEach((btn) => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             const card = this.closest('.workout-card');
-            const workoutName = card.querySelector('.workout-name').textContent;
-            const category = card.getAttribute('data-category');
-            const description = card.querySelector('.workout-description').textContent;
-            alert(`Workout Details:\n\nName: ${workoutName}\nCategory: ${category}\nDescription: ${description}`);
+            openWorkoutModal(card);
         });
     });
 
     document.querySelectorAll('.btn-add').forEach((btn) => {
-        btn.addEventListener('click', function(e) {
+        btn.dataset.originalText = btn.textContent;
+
+        btn.addEventListener('click', async function(e) {
             e.preventDefault();
-            const card = this.closest('.workout-card');
-            const workoutName = card.querySelector('.workout-name').textContent;
 
-            const originalText = this.textContent;
-            this.textContent = '✓ Added!';
-            this.style.background = 'linear-gradient(135deg, var(--lime), #A4C628)';
-            this.style.color = '#000';
+            const workoutId = this.dataset.workoutId;
 
-            setTimeout(() => {
-                this.textContent = originalText;
-                this.style.background = 'linear-gradient(135deg, var(--orange), var(--red))';
-                this.style.color = '#fff';
-            }, 2000);
+            await loadUserRoutines();
 
-            console.log(`Added ${workoutName} to routine`);
+            if (userRoutines.length === 0) {
+                showToast('No routines found. Create a routine first.', true);
+                return;
+            }
+
+            if (userRoutines.length === 1) {
+                await addWorkoutToRoutine(userRoutines[0].id, workoutId, this);
+                return;
+            }
+
+            renderRoutineOptions(workoutId, this);
+            openRoutineSelectModal();
         });
+    });
+
+    document.getElementById('modalCloseBtn').addEventListener('click', closeWorkoutModal);
+    document.getElementById('modalFooterCloseBtn').addEventListener('click', closeWorkoutModal);
+
+    document.getElementById('viewWorkoutModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeWorkoutModal();
+        }
+    });
+
+    document.getElementById('routineSelectCloseBtn').addEventListener('click', closeRoutineSelectModal);
+    document.getElementById('routineSelectFooterCloseBtn').addEventListener('click', closeRoutineSelectModal);
+
+    document.getElementById('routineSelectModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeRoutineSelectModal();
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeWorkoutModal();
+            closeRoutineSelectModal();
+        }
     });
 </script>
 
